@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="sample.controller.MainController"
+            prefHeight="400.0" prefWidth="600.0">
+    <children>
+        <HBox layoutX="163.0" layoutY="135.0" prefHeight="100.0" prefWidth="200.0">
+            <children>
+                <fx:include fx:id="loginController" source="Login.fxml"/>
+                <fx:include fx:id="guesserClientController" source="GuesserClient.fxml"/>
+                <fx:include fx:id="drawerClientController" source="DrawerClient.fxml"/>
+            </children>
+        </HBox>
+    </children>
+</AnchorPane>

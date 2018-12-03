@@ -1,0 +1,24 @@
+#gp{
+    -fx-background-color: #edffe1;
+}
+#btExit{
+    -fx-background-color: #ff2500;
+    -fx-background-radius: 5;
+    -fx-text-fill: #fff;
+}
+#btLogin{
+    -fx-background-color: #4fb8ff;
+    -fx-background-radius: 5;
+    -fx-text-fill: #fff;
+}
+#textUser{
+    -fx-background-radius: 5;
+}
+#textPwd{
+    -fx-background-radius: 5;
+}
+#menu{
+    -fx-background-color: #b0ccff;
+    -fx-background-radius: 5;
+    -fx-text-fill: #fff;
+}

@@ -1,0 +1,17 @@
+.VBox{
+    -fx-background-color: rgb(80,113,91);
+}
+.HBox{
+    -fx-background-color: rgb(123,76,33);
+    -fx-background-image: url("../images/bg.png");
+}
+#canvas{
+    -fx-background-color: transparent;
+}
+
+
+
+
+
+
+

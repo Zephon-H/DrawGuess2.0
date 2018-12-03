@@ -1,0 +1,95 @@
+.VBox{
+    -fx-background-color: rgb(80,113,91);
+}
+.HBox{
+    -fx-background-color: rgb(123,76,33);
+    -fx-background-image: url("../images/bg.png");
+}
+#menuThickness{
+    -fx-background-color: rgb(123,76,33);
+    -fx-border-color: #000;
+    -fx-border-radius: 5;
+    -fx-border-width: 2;
+    -fx-background-radius: 3;
+}
+.color-picker{
+    -fx-background-color: transparent;
+    -fx-border-color: #000;
+    -fx-border-radius: 5;
+    -fx-border-width: 2;
+    -fx-background-radius: 3;
+}
+#shape{
+    -fx-background-color: transparent;
+    -fx-border-color: #000;
+    -fx-border-radius: 5;
+    -fx-border-width: 2;
+    -fx-background-radius: 3;
+}
+#drawMenuButton{
+    -fx-background-color: transparent;
+    -fx-border-color: #000;
+    -fx-border-radius: 5;
+    -fx-border-width: 2;
+    -fx-background-radius: 3;
+}
+.item{
+    -fx-background-color: rgb(123,76,33);
+    -fx-background-radius: 3;
+}
+.button{
+    -fx-background-radius: 5;
+}
+#btDraw{
+    -fx-background-color: transparent;
+    -fx-border-color: #000;
+    -fx-border-radius: 5;
+    -fx-border-width: 2;
+    -fx-background-image: url("../images/pen.png");
+    -fx-background-repeat: no-repeat;
+    -fx-background-size: 32px;
+    -fx-background-position: 50%;
+}
+#btEraser{
+    -fx-background-color: transparent;
+    -fx-border-color: #000;
+    -fx-border-radius: 5;
+    -fx-border-width: 2;
+    -fx-background-image: url("../images/eraser.png");
+    -fx-background-repeat: no-repeat;
+    -fx-background-size: 32px;
+    -fx-background-position: 50%;
+}
+#clear{
+    -fx-background-color: transparent;
+}
+#line{
+    -fx-background-image: url("../images/line.png");
+    -fx-background-repeat: no-repeat;
+    -fx-background-size: 25px;
+    -fx-background-position: 50%;
+}
+#dot{
+    -fx-background-image: url("../images/dot.png");
+    -fx-background-repeat: no-repeat;
+    -fx-background-size: 25px;
+    -fx-background-position: 50%;
+}
+#rect{
+    -fx-background-image: url("../images/rect.png");
+    -fx-background-repeat: no-repeat;
+    -fx-background-size: 25px;
+    -fx-background-position: 50%;
+}
+#ovl{
+    -fx-background-image: url("../images/ovl.png");
+    -fx-background-repeat: no-repeat;
+    -fx-background-size: 25px;
+    -fx-background-position: 50%;
+}
+.button{
+    -fx-background-color: #fff;
+    -fx-border-color: #000;
+    -fx-border-radius: 5;
+    -fx-border-width: 2;
+}
