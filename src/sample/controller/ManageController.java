@@ -32,7 +32,7 @@ import java.util.List;
 import java.util.ResourceBundle;
 
 /**
- * 〈一句话功能简述〉<br> 
+ * 〈一句话功能简述〉<br>
  * 〈〉
  *
  * @author Zephon
@@ -52,8 +52,9 @@ public class ManageController implements Initializable {
     public void initialize(URL location, ResourceBundle resources) {
         l = new ArrayList<>();
     }
+
     @FXML
-    public void addWord(Event event){
+    public void addWord(Event event) {
         l.clear();
         Stage stage = (Stage) pane.getScene().getWindow();
         FileChooser fileChooser = new FileChooser();
@@ -62,14 +63,14 @@ public class ManageController implements Initializable {
         File file = fileChooser.showOpenDialog(stage);
         path.setText(file.getName());
         try {
-            BufferedReader bfr = new BufferedReader(new InputStreamReader(new FileInputStream(file),"utf-8"));
+            BufferedReader bfr = new BufferedReader(new InputStreamReader(new FileInputStream(file), "utf-8"));
             String str = null;
             int lineNumber = 0;
             while ((str = bfr.readLine()) != null) {
                 lineNumber++;
                 l.add(str);
             }
-            ObservableList<String> items = FXCollections.observableArrayList (l);
+            ObservableList<String> items = FXCollections.observableArrayList(l);
             list.setItems(items);
         } catch (FileNotFoundException e) {
             e.printStackTrace();
@@ -77,27 +78,28 @@ public class ManageController implements Initializable {
             e.printStackTrace();
         }
     }
+
     @FXML
-    public void view(){
+    public void view() {
         MyDataBase m = new MyDataBase();
         List l = m.getTitle();
-        ObservableList<String> items = FXCollections.observableArrayList (l);
+        ObservableList<String> items = FXCollections.observableArrayList(l);
         list.setItems(items);
     }
 
     @FXML
-    public void ok(){
-        new Thread(()->{
+    public void ok() {
+        new Thread(() -> {
             MyDataBase m = new MyDataBase();
             System.out.println(l);
             int len = m.getTitle().size();
-            if(!l.isEmpty()){
+            if (!l.isEmpty()) {
                 System.out.println(l);
-                for(String str:l){
+                for (String str : l) {
                     System.out.println(str);
                     System.out.println(m.checkedWord(str));
-                    if(!m.checkedWord(str)){
-                        m.insert("insert into title_table values("+(++len)+",'"+str+"')");
+                    if (!m.checkedWord(str)) {
+                        m.insert("insert into title_table values(" + (++len) + ",'" + str + "')");
                     }
                 }
             }
