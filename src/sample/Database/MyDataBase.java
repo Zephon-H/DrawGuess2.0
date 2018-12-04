@@ -15,7 +15,7 @@ import java.util.*;
 
 /**
  * 〈一句话功能简述〉<br> 
- * 〈〉
+ * 〈数据库功能集合成类〉
  *
  * @author Zephon
  * @create 2018/11/29
@@ -37,6 +37,13 @@ public class MyDataBase {
     public static String current="";
     public MyDataBase(){
     }
+
+    /**
+     * 检查name与pwd在数据库中是否已经存在-用户登陆
+     * @param name
+     * @param pwd
+     * @return
+     */
     public boolean checkedUser(String name,String pwd){
         list = query("select * from user");
         boolean flag = false;
@@ -51,6 +58,11 @@ public class MyDataBase {
         return flag;
     }
 
+    /**
+     * 仅检查name在数据库中是否存在-用户登陆
+     * @param name
+     * @return
+     */
     public boolean checkedUser(String name){
         list = query("select * from user");
         boolean flag = false;
@@ -62,6 +74,11 @@ public class MyDataBase {
         return flag;
     }
 
+    /**
+     * 检查word是否存在-词库
+     * @param word
+     * @return
+     */
     public boolean checkedWord(String word){
         list = query("select * from title_table");
         boolean flag = false;
@@ -73,27 +90,37 @@ public class MyDataBase {
         return flag;
     }
 
+    /**
+     * 测试数据库
+     * @param args
+     */
     public static void main(String[] args){
         MyDataBase m = new MyDataBase();
         m.insert("insert into title_table values("+7+",'"+"asdf"+"')");
     }
+
+
     List<String> l = new ArrayList<>();
+
+    /**
+     * 选取打乱顺序后的List中的第一个
+     * @return
+     */
     public String getCurrentTitle(){
         current = l.get(0);
         return l.get(0);
     }
 
+    /**
+     * 获取数据库中所有的词库，并打乱顺序
+     * @return
+     */
     public List getTitle(){
-
         list = query("select * from title_table");
         for(int i=1;i<=list.size();i++){
             l.add((String) list.get(i-1).get(i));
         }
-        /*list.forEach(map->{
-            l.add((String)map.get(list.indexOf(map)));
-        });*/
         Collections.shuffle(l);
-
         return l;
     }
 

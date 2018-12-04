@@ -10,21 +10,17 @@
  */
 package sample.controller;
 
-import javafx.beans.binding.Bindings;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.ContextMenu;
 import javafx.scene.control.ListView;
-import javafx.scene.control.MenuItem;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import sample.Database.MyDataBase;
-
 import java.io.*;
 import java.net.URL;
 import java.util.ArrayList;
@@ -33,7 +29,7 @@ import java.util.ResourceBundle;
 
 /**
  * 〈一句话功能简述〉<br>
- * 〈〉
+ * 〈管理员界面控制器〉
  *
  * @author Zephon
  * @create 2018/12/4
@@ -53,6 +49,10 @@ public class ManageController implements Initializable {
         l = new ArrayList<>();
     }
 
+    /**
+     * 鼠标点击“添加”按钮事件
+     * @param event
+     */
     @FXML
     public void addWord(Event event) {
         l.clear();
@@ -79,6 +79,9 @@ public class ManageController implements Initializable {
         }
     }
 
+    /**
+     * 查看用户数据按钮点击事件
+     */
     @FXML
     public void view() {
         MyDataBase m = new MyDataBase();
@@ -87,6 +90,9 @@ public class ManageController implements Initializable {
         list.setItems(items);
     }
 
+    /**
+     * 按钮 “确定” 点击事件
+     */
     @FXML
     public void ok() {
         new Thread(() -> {

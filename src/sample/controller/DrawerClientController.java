@@ -5,10 +5,7 @@ import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Platform;
-import javafx.beans.value.ObservableDoubleValue;
-import javafx.beans.value.ObservableNumberValue;
 import javafx.embed.swing.SwingFXUtils;
-import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -17,7 +14,6 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.image.WritableImage;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
@@ -25,14 +21,11 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
-import javafx.scene.shape.Line;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.util.Duration;
 import sample.Database.MyDataBase;
-import sample.Util.AppModel;
 import sample.Util.Receive;
-import sample.Util.Send;
 
 import javax.imageio.ImageIO;
 import java.io.DataOutputStream;
@@ -41,17 +34,20 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.net.Socket;
 import java.net.URL;
-import java.text.DecimalFormat;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Observable;
 import java.util.ResourceBundle;
 
+/**
+ * 〈一句话功能简述〉<br>
+ * 〈画者界面控制器〉
+ *
+ * @author Zephon
+ * @create 2018/12/2
+ * @since 1.0.0
+ */
 public class DrawerClientController implements Initializable {
     @FXML
     private Canvas canvas;
-    @FXML
-    private Button send;
+
     @FXML
     private TextArea input;
     @FXML
@@ -78,32 +74,44 @@ public class DrawerClientController implements Initializable {
     private String name;
     private boolean isrunning;
     Timeline tl;
+    private int count = 0;
+    private int time;
 
-    public DrawerClientController(String name){
+    /**
+     * 通过构造函数，从登陆界面传输用户名数据到画手界面
+     * @param name
+     */
+    public DrawerClientController(String name) {
         this.name = name;
     }
 
+    /**
+     * 初始化
+     *
+     * @param location
+     * @param resources
+     */
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        time = 60;
         isrunning = false;
+        //hard();
+        easy();
         tl = new Timeline();
         try {
-            new Thread(()->{
+            new Thread(() -> {
                 try {
                     picSocket = new Socket("localhost", 9999);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
             }).start();
-            //picSocket = new Socket("localhost", 9999);
             chattingSocket = new Socket("localhost", 8888);
             new Thread(new Receive(chattingSocket, text)).start();
         } catch (Exception e) {
             e.printStackTrace();
             System.out.println("图片服务器连接失败");
         }
-        System.out.println("name"+name+".");
+        System.out.println("name" + name + ".");
         color = Color.BLACK;
         gc = canvas.getGraphicsContext2D();
         gc.save();
@@ -115,30 +123,42 @@ public class DrawerClientController implements Initializable {
         Platform.runLater(this::clear);
         draw();
     }
+
+    /**
+     * 点击“发送”按钮 实现聊天消息发送
+     */
     @FXML
-    public void Send(){
+    public void Send() {
         try {
             DataOutputStream dos = new DataOutputStream(chattingSocket.getOutputStream());
             String msg = input.getText();
-            dos.writeUTF("画者-"+name + ":" + msg + "\n");
+            dos.writeUTF("画者-" + name + ":" + msg + "\n");
         } catch (IOException e) {
-
+            System.out.println("服务器异常");
         }
         input.setText("");
         input.requestFocus();
     }
 
-    public void Send(String title){
+    /**
+     * 发送特定的消息
+     *
+     * @param title
+     */
+    public void Send(String title) {
         try {
             DataOutputStream dos = new DataOutputStream(chattingSocket.getOutputStream());
             String msg = title;
-            dos.writeUTF( msg);
+            dos.writeUTF(msg);
         } catch (IOException e) {
-
+            System.out.println("服务器异常");
         }
     }
 
 
+    /**
+     * 修改画笔的粗细（按钮）
+     */
     @FXML
     public void slideChange() {
         slThickness.valueProperty().addListener((ov, old, n) -> {
@@ -151,7 +171,7 @@ public class DrawerClientController implements Initializable {
     }
 
     /**
-     * 画笔---设置颜色---宽度
+     * 画笔按钮 默认画笔
      */
     @FXML
     private void draw() {
@@ -164,7 +184,7 @@ public class DrawerClientController implements Initializable {
     }
 
     /**
-     * 橡皮擦
+     * 橡皮擦功能
      */
     @FXML
     public void erase() {
@@ -175,6 +195,11 @@ public class DrawerClientController implements Initializable {
         paint();
     }
 
+    /**
+     * 实现鼠标绘制功能
+     * 每次鼠标按下、松开、拖拽都对应相应的数据改变与发送
+     * 实现同步
+     */
     public void paint() {
         sendPic();
         canvas.setOnMousePressed(event -> {
@@ -196,7 +221,7 @@ public class DrawerClientController implements Initializable {
     }
 
     /**
-     * 设置颜色
+     * 颜色按钮 设置颜色
      */
     @FXML
     public void setColor() {
@@ -204,8 +229,10 @@ public class DrawerClientController implements Initializable {
         draw();
     }
 
-    private int count = 0;
-
+    /**
+     * 直线选项-画直线
+     * 用count代表第几个点，点击两点连成一条直线
+     */
     @FXML
     public void drawLine() {
         draw();
@@ -228,6 +255,9 @@ public class DrawerClientController implements Initializable {
         });
     }
 
+    /**
+     * 虚线选项-画虚线
+     */
     @FXML
     public void drawDottedLine() {
         draw();
@@ -235,7 +265,8 @@ public class DrawerClientController implements Initializable {
     }
 
     /**
-     * 画矩形，重复画时有bug
+     * 矩形选项-画矩形
+     * 重复画时有bug
      */
     @FXML
     public void drawRec() {
@@ -261,7 +292,7 @@ public class DrawerClientController implements Initializable {
     }
 
     /**
-     * 画圆
+     * 画圆选项-画圆，但只能点击，看不到轨迹变化
      * 功能未完全实现
      */
     @FXML
@@ -297,6 +328,9 @@ public class DrawerClientController implements Initializable {
         sendPic();
     }
 
+    /**
+     * 对canvas画布截图并保存成文件然后发送
+     */
     public void sendPic() {
         WritableImage image = canvas.snapshot(new SnapshotParameters(), null);
         File file = new File("src/sample/images/pic.png");
@@ -315,57 +349,91 @@ public class DrawerClientController implements Initializable {
             }
             System.out.println("保存成功");
         } catch (Exception e) {
-            //e.printStackTrace();
             System.out.println("图片保存失败");
         }
     }
+
+    /**
+     * 菜单中游戏中点击开始选项，开始计时
+     */
     @FXML
-    public void begin(){
-        if(tl.getStatus().equals(Animation.Status.RUNNING)){
-            return ;
+    public void begin() {
+        if (tl.getStatus().equals(Animation.Status.RUNNING)) {
+            return;
         }
         isrunning = true;
         MyDataBase m = new MyDataBase();
         m.getTitle();
         String str = m.getCurrentTitle();
-        titleLabel.setText("题目："+str);
+        titleLabel.setText("题目：" + str);
         Send(str);
         TimeStart();
     }
-    private int time;
+
+    /**
+     * 菜单中游戏-退出
+     */
     @FXML
-    public void easy(){
-        if(!isrunning)
-        time = 90;
-    }
-    @FXML
-    public void mid(){
-        if(!isrunning)
-        time = 60;
-    }
-    @FXML
-    public void hard(){
-        if(!isrunning)
-        time = 30;
+    public void exit() {
+        System.exit(0);
     }
 
-    public void TimeStart(){
-        tl = new Timeline(new KeyFrame(Duration.millis(1000), e->{
-            timeLabel.setText("还剩:"+--time+"秒");
-            if(time==0){
+    /**
+     * 菜单中设置中简单选项，通过改变time倒计时时时间改变难度
+     */
+    @FXML
+    public void easy() {
+        if (!isrunning)
+            time = 60;
+    }
+
+    /**
+     * 中等难度
+     */
+    @FXML
+    public void mid() {
+        if (!isrunning)
+            time = 40;
+    }
+
+    /**
+     * 困难难度
+     */
+    @FXML
+    public void hard() {
+        if (!isrunning)
+            time = 20;
+    }
+
+    /**
+     * 使用Timeline实现倒计时
+     */
+    public void TimeStart() {
+        int t =time;
+        tl = new Timeline(new KeyFrame(Duration.millis(1000), e -> {
+            timeLabel.setText("还剩:" + --time + "秒");
+            if (time == 0) {
                 System.out.println("over");
             }
         }));
         tl.setCycleCount(time);
         tl.play();
         tl.onFinishedProperty().set(event -> {
-            Alert alert = new Alert(Alert.AlertType.INFORMATION,"时间到",new ButtonType("继续游戏",ButtonBar.ButtonData.YES),new ButtonType("休息一下",ButtonBar.ButtonData.NO));
+            Send("@#$%*&暂停");
+            Alert alert = new Alert(Alert.AlertType.INFORMATION, "时间到", new ButtonType("继续游戏", ButtonBar.ButtonData.YES), new ButtonType("休息一下", ButtonBar.ButtonData.NO));
             alert.setTitle("提示");
-
-            alert.setOnHidden(ev->{
-                if( alert.getResult().getButtonData().equals(ButtonBar.ButtonData.YES)){
+            alert.setOnHidden(ev -> {
+                if (alert.getResult().getButtonData().equals(ButtonBar.ButtonData.YES)) {
+                    time = t;
+                    System.out.println("time"+time+"t"+t);
+                    try {
+                        Thread.sleep(100);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
                     begin();
-                }else{
+                } else {
+                    time = t;
                     System.out.println("休息");
                     isrunning = false;
                 }
@@ -374,8 +442,12 @@ public class DrawerClientController implements Initializable {
         });
 
     }
+
+    /**
+     * 菜单中帮助中关于选项
+     */
     @FXML
-    public void about(){
+    public void about() {
         Stage s = new Stage();
         Parent root = null;
         try {
@@ -385,21 +457,18 @@ public class DrawerClientController implements Initializable {
         }
         s.setTitle("你画我猜");
         s.getIcons().add(new Image("file:src/sample/images/icon.png"));
-        Scene scene = new Scene(root,300,160);
+        Scene scene = new Scene(root, 300, 160);
         s.setScene(scene);
         s.setResizable(false);
-        scene.getAccelerators().put(new KeyCodeCombination(KeyCode.ESCAPE ), ()->{
+        scene.getAccelerators().put(new KeyCodeCombination(KeyCode.ESCAPE), () -> {
             s.close();
         });
-        s.addEventHandler(MouseEvent.MOUSE_CLICKED, (event)->{
+        s.addEventHandler(MouseEvent.MOUSE_CLICKED, (event) -> {
             s.close();
         });
         s.initStyle(StageStyle.TRANSPARENT);
         s.show();
     }
-    @FXML
-    public void exit(){
-        System.exit(0);
-    }
+
 
 }

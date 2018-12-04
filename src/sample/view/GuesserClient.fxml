@@ -16,13 +16,13 @@
         <menus>
             <Menu mnemonicParsing="false" text="游戏">
                 <items>
-                    <MenuItem mnemonicParsing="false" text="退出" />
+                    <MenuItem mnemonicParsing="false" onAction="#exit" text="退出" />
                 </items>
             </Menu>
             <Menu mnemonicParsing="false" text="设置" />
             <Menu mnemonicParsing="false" text="帮助">
                 <items>
-                    <MenuItem mnemonicParsing="false" text="关于" />
+                    <MenuItem mnemonicParsing="false" onAction="#about" text="关于" />
                 </items>
             </Menu>
         </menus>

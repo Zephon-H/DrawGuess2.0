@@ -10,9 +10,9 @@
    <children>
       <Label layoutX="14.0" layoutY="21.0" prefHeight="20.0" prefWidth="76.0" text="添加词库：" />
       <TextField fx:id="path" layoutX="97.0" layoutY="16.0" />
-      <Button layoutX="329.0" layoutY="16.0" mnemonicParsing="false" onAction="#addWord" text="添加" />
+      <Button layoutX="329.0" layoutY="16.0" mnemonicParsing="false" onAction="#addWord" text="选择文件" />
       <ListView fx:id="list" layoutX="6.0" layoutY="50.0" prefHeight="244.0" prefWidth="361.0" />
-      <Button layoutX="379.0" layoutY="56.0" mnemonicParsing="false" onAction="#view" text="查看用户" />
-      <Button layoutX="390.0" layoutY="16.0" mnemonicParsing="false" onAction="#ok" text="确定" />
+      <Button layoutX="387.0" layoutY="76.0" mnemonicParsing="false" onAction="#view" text="查看用户" />
+      <Button layoutX="427.0" layoutY="16.0" mnemonicParsing="false" onAction="#ok" text="确定" />
    </children>
 </AnchorPane>

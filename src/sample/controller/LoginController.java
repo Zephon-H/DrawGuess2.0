@@ -14,16 +14,22 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 import sample.Database.MyDataBase;
-import sample.Util.AppModel;
 
 import java.io.IOException;
 import java.net.URL;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
+/**
+ * 〈一句话功能简述〉<br>
+ * 〈登陆界面控制器〉
+ *
+ * @author Zephon
+ * @create 2018/11/30
+ * @since 1.0.0
+ */
 public class LoginController implements Initializable {
     private int count;
-
     @FXML
     private GridPane gp;
     @FXML
@@ -36,17 +42,12 @@ public class LoginController implements Initializable {
     private MenuButton menu;
     private Stage nstage;
 
-
-    private MainController mainController;
-    //注入MainController
-    void injectMainController(MainController mainController) {
-        this.mainController = mainController;
-    }
-    @FXML
-    private TextField getTextUser(){
-        return this.mainController.getUsername();
-    }
-
+    /**
+     * 初始化
+     *
+     * @param location
+     * @param resources
+     */
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         count = 0;
@@ -54,79 +55,118 @@ public class LoginController implements Initializable {
         drawClient();
     }
 
+    /**
+     * 登陆判定（按钮）
+     */
     @FXML
-    public void loginClicked(){
+    public void loginClicked() {
         login();
     }
-    public void login(){
+
+    /**
+     * 登陆判定具体
+     */
+    public void login() {
         Stage stage = (Stage) gp.getScene().getWindow();
         count++;
         String username = textUser.getText();
         String pwd = textPwd.getText();
         MyDataBase m = new MyDataBase();
-        if(m.checkedUser(username,pwd)){
-            if(menu.getText().equals("画手")){
+        if (m.checkedUser(username, pwd)) {
+            if (menu.getText().equals("画手")) {
                 draw();
-            }else if(menu.getText().equals("猜者")){
+            } else if (menu.getText().equals("猜者")) {
                 guess();
-            }else if(menu.getText().equals("管理员")){
+            } else if (menu.getText().equals("管理员")) {
                 manage();
             }
-                nstage.show();
-                stage.close();
-        }else if(count<3){
-            Alert alert = new Alert(Alert.AlertType.INFORMATION,"用户名或密码错误",new ButtonType("确定", ButtonBar.ButtonData.YES));
+            nstage.show();
+            stage.close();
+        } else if (count < 3) {
+            Alert alert = new Alert(Alert.AlertType.INFORMATION, "用户名或密码错误", new ButtonType("确定", ButtonBar.ButtonData.YES));
             alert.setTitle("提示");
             Optional<ButtonType> bt = alert.showAndWait();
-            if(bt.get().getButtonData().equals(ButtonBar.ButtonData.YES)){
+            if (bt.get().getButtonData().equals(ButtonBar.ButtonData.YES)) {
                 textUser.clear();
                 textPwd.clear();
                 textUser.requestFocus();
             }
-        }else{
-            Alert alert = new Alert(Alert.AlertType.WARNING,"用户名或密码错误次数过多",new ButtonType("退出",ButtonBar.ButtonData.YES));
+        } else {
+            Alert alert = new Alert(Alert.AlertType.WARNING, "用户名或密码错误次数过多", new ButtonType("退出", ButtonBar.ButtonData.YES));
             alert.setTitle("提示");
             Optional<ButtonType> bt = alert.showAndWait();
-            if(bt.get().getButtonData().equals(ButtonBar.ButtonData.YES)){
+            if (bt.get().getButtonData().equals(ButtonBar.ButtonData.YES)) {
                 Platform.exit();
             }
         }
     }
 
+    /**
+     * 登陆设置快捷键
+     *
+     * @param event
+     */
     @FXML
-    public void loginPressed(KeyEvent event){
-        if(event.getCode()==KeyCode.ENTER){
+    public void loginPressed(KeyEvent event) {
+        if (event.getCode() == KeyCode.ENTER) {
             login();
         }
     }
 
-
-    public void exitClicked(){
+    /**
+     * 退出（按钮）
+     */
+    public void exitClicked() {
         System.exit(0);
     }
 
+    /**
+     * 画者-猜者-管理员选择框
+     * 菜单选择框-通过设置名字进行login中的判定
+     */
     @FXML
-    public void drawClient(){
+    public void drawClient() {
         menu.setText("画手");
     }
+
+    /**
+     * 画者-猜者-管理员选择框
+     */
     @FXML
-    public void guessClient(){
+    public void guessClient() {
         menu.setText("猜者");
     }
+
+    /**
+     * 画者-猜者-管理员选择框
+     */
     @FXML
-    public void manageClient(){menu.setText("管理员");}
-    public void draw(){
+    public void manageClient() {
+        menu.setText("管理员");
+    }
+
+    /**
+     * 设置画者界面属性
+     */
+    public void draw() {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("../view/DrawerClient.fxml"));
         loader.setController(new DrawerClientController(textUser.getText()));
         setting(loader);
     }
 
-    public void guess(){
+    /**
+     * 设置猜者界面属性
+     */
+    public void guess() {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("../view/GuesserClient.fxml"));
         loader.setController(new GuesserClientController(textUser.getText()));
         setting(loader);
     }
-    public void manage(){
+
+    /**
+     * 设置管理员界面属性
+     */
+    public void manage() {
         Parent root = null;
         try {
             root = FXMLLoader.load(getClass().getResource("../view/Manager.fxml"));
@@ -135,12 +175,17 @@ public class LoginController implements Initializable {
         }
         nstage.setTitle("你画我猜");
         nstage.getIcons().add(new Image("file:src/sample/images/icon.png"));
-        Scene scene = new Scene(root,500,300);
+        Scene scene = new Scene(root, 500, 300);
         nstage.setScene(scene);
         nstage.setResizable(false);
     }
 
-    public void setting(FXMLLoader loader){
+    /**
+     * 画者与猜者界面共同方法的提取
+     *
+     * @param loader
+     */
+    public void setting(FXMLLoader loader) {
         try {
             Parent root = loader.load();
             nstage.setTitle("你画我猜");
@@ -151,8 +196,11 @@ public class LoginController implements Initializable {
         }
     }
 
+    /**
+     * 注册功能
+     */
     @FXML
-    public void register(){
+    public void register() {
         Stage s = new Stage();
         Parent root = null;
         try {
@@ -162,14 +210,13 @@ public class LoginController implements Initializable {
         }
         s.setTitle("你画我猜");
         s.getIcons().add(new Image("file:src/sample/images/icon.png"));
-        Scene scene = new Scene(root,400,220);
+        Scene scene = new Scene(root, 400, 220);
         s.setScene(scene);
         s.setResizable(false);
-        scene.getAccelerators().put(new KeyCodeCombination(KeyCode.ESCAPE ), ()->{
+        scene.getAccelerators().put(new KeyCodeCombination(KeyCode.ESCAPE), () -> {
             s.close();
         });
         s.show();
     }
-
 
 }

@@ -21,7 +21,7 @@ import java.net.SocketTimeoutException;
 
 /**
  * 〈一句话功能简述〉<br>
- * 〈〉
+ * 〈图片接收〉
  *
  * @author Zephon
  * @create 2018/12/3
@@ -32,6 +32,11 @@ public class PicReceiver implements Runnable {
     private InputStream is;
     private Socket socket;
     private GraphicsContext gc;
+
+    /**
+     * 初始化-传入画笔gc
+     * @param gc
+     */
     public  PicReceiver(GraphicsContext gc){
         try {
             this.socket = new Socket("localhost",9999);
@@ -42,23 +47,26 @@ public class PicReceiver implements Runnable {
             this.gc = gc;
             is =socket.getInputStream();
         } catch (IOException e) {
-            //e.printStackTrace();
             isRunning = false;
         }
     }
+
+    /**
+     * 接受图片，并保存到images中
+     */
     private void receive(){
         byte[] buf = new byte[1024];
         int len = 0;
         FileOutputStream fos = null;
         try {
-            System.out.println("正在接收数据...");
+            //System.out.println("正在接收数据...");
             while((len = is.read(buf)) != -1){  //阻塞
                 if(fos == null) { fos = new FileOutputStream("D:\\JavaCode\\DrawGuess2.0\\src\\sample\\images\\receive.png"); }
                 fos.write(buf, 0, len);
                 //怎样判断文件接收完成？
                 //1. 如果对方断开连接，本循环自动退出
                 //2. 如果对方保持连接，用超时进行判断
-                socket.setSoTimeout(20); //设置100ms超时
+                socket.setSoTimeout(20); //设置20ms超时
             }
         }  catch (SocketTimeoutException eTimeout) {
             gc.drawImage(new Image("file:D:\\JavaCode\\DrawGuess2.0\\src\\sample\\images\\receive.png"),0,0);
@@ -66,11 +74,14 @@ public class PicReceiver implements Runnable {
             isRunning = false;
         }
     }
+
+    /**
+     * 保证持续运行
+     */
     @Override
     public void run() {
         while(isRunning){
             receive();
-
         }
     }
 

@@ -29,6 +29,12 @@ public class Receive implements Runnable {
     private TextArea text;
     DataInputStream is ;
     Socket socket;
+
+    /**
+     * 初始化
+     * @param socket
+     * @param text
+     */
     public  Receive(Socket socket,TextArea text){
         this.socket = socket;
         try {
@@ -40,6 +46,10 @@ public class Receive implements Runnable {
             isRunning = false;
         }
     }
+
+    /**
+     * 接收消息
+     */
     private void receive(){
         try {
             //System.out.println(is.readUTF());
@@ -51,6 +61,10 @@ public class Receive implements Runnable {
             isRunning = false;
         }
     }
+
+    /**
+     * 持续运行
+     */
     @Override
     public void run() {
         while(isRunning){
