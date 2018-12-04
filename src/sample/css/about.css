@@ -1,0 +1,7 @@
+.HBox{
+    -fx-background-image: url("../images/about.jpg");
+    -fx-background-size: 300px;
+}
+.anchor{
+    -fx-background-image: url("../images/about1.jpg");
+}

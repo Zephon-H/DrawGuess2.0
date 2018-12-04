@@ -2,6 +2,7 @@
 
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Hyperlink?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.MenuButton?>
 <?import javafx.scene.control.MenuItem?>
@@ -36,7 +37,7 @@
         <items>
           <MenuItem mnemonicParsing="false" onAction="#drawClient" text="画手" />
           <MenuItem mnemonicParsing="false" onAction="#guessClient" text="猜者" />
-            <MenuItem mnemonicParsing="false" text="管理员" />
+            <MenuItem mnemonicParsing="false" onAction="#manageClient" text="管理员" />
         </items>
       </MenuButton>
       <Button fx:id="btLogin" defaultButton="true" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#loginClicked" onKeyPressed="#loginPressed" stylesheets="@../css/login.css" text="登陆" GridPane.columnIndex="2" GridPane.hgrow="ALWAYS" GridPane.rowIndex="4">
@@ -45,5 +46,6 @@
          </GridPane.margin>
       </Button>
       <Button fx:id="btExit" mnemonicParsing="false" onAction="#exitClicked" prefHeight="30.0" prefWidth="70.0" stylesheets="@../css/login.css" text="退出" GridPane.columnIndex="1" GridPane.hgrow="ALWAYS" GridPane.rowIndex="4" />
+      <Hyperlink onAction="#register" prefHeight="28.0" prefWidth="73.0" text="点我注册" GridPane.columnIndex="3" GridPane.rowIndex="2" />
    </children>
 </GridPane>

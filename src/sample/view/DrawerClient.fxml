@@ -13,30 +13,42 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="420.0" prefWidth="831.0" stylesheets="@../css/drawerclient.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.controller.DrawerClientController">
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="461.0" prefWidth="831.0" stylesheets="@../css/drawerclient.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1">
     <children>
         <MenuBar prefHeight="21.0" prefWidth="600.0">
             <menus>
                 <Menu mnemonicParsing="false" text="游戏">
                     <items>
+                  <MenuItem mnemonicParsing="false" onAction="#begin" text="开始游戏" />
                         <MenuItem mnemonicParsing="false" text="退出" />
                     </items>
                 </Menu>
-                <Menu mnemonicParsing="false" text="设置" />
+                <Menu mnemonicParsing="false" text="设置">
+               <items>
+                  <MenuItem mnemonicParsing="false" onAction="#easy" text="游戏难度-简单" />
+                  <MenuItem mnemonicParsing="false" onAction="#mid" text="游戏难度-中等" />
+                  <MenuItem mnemonicParsing="false" onAction="#hard" text="游戏难度-困难" />
+               </items></Menu>
                 <Menu mnemonicParsing="false" text="帮助">
                     <items>
-                        <MenuItem mnemonicParsing="false" text="关于" />
+                        <MenuItem mnemonicParsing="false" onAction="#about" text="关于" />
                     </items>
                 </Menu>
             </menus>
         </MenuBar>
-        <HBox maxWidth="1.7976931348623157E308" prefHeight="377.0" prefWidth="600.0" stylesheets="@../css/drawerclient.css" VBox.vgrow="ALWAYS">
+        <HBox maxWidth="1.7976931348623157E308" prefHeight="382.0" prefWidth="600.0" stylesheets="@../css/drawerclient.css" VBox.vgrow="ALWAYS">
             <children>
-                <VBox maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="330.0" prefWidth="410.0" styleClass="VBox" stylesheets="@../css/drawerclient.css" HBox.hgrow="ALWAYS">
+                <VBox maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="429.0" prefWidth="573.0" styleClass="VBox" stylesheets="@../css/drawerclient.css" HBox.hgrow="ALWAYS">
                     <children>
-                        <VBox fx:id="vBox" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="334.0" prefWidth="435.0" VBox.vgrow="ALWAYS">
+                  <HBox fx:id="head" prefHeight="26.0" prefWidth="538.0" stylesheets="@../css/drawerclient.css">
+                     <children>
+                        <Label fx:id="titleLabel" maxHeight="-Infinity" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="26.0" prefWidth="481.0" text="题目：" HBox.hgrow="ALWAYS" />
+                        <Label fx:id="timeLabel" maxHeight="-Infinity" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="26.0" prefWidth="108.0" text="还剩：60秒" HBox.hgrow="ALWAYS" />
+                     </children>
+                  </HBox>
+                        <VBox fx:id="vBox" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="369.0" prefWidth="507.0" VBox.vgrow="ALWAYS">
                             <children>
-                                <Canvas fx:id="canvas" height="358.0" width="546.0" VBox.vgrow="ALWAYS" />
+                                <Canvas fx:id="canvas" height="277.0" width="501.0" VBox.vgrow="ALWAYS" />
                             </children>
                         </VBox>
                         <HBox maxHeight="-Infinity" maxWidth="1.7976931348623157E308" prefHeight="32.0" prefWidth="428.0" styleClass="HBox" VBox.vgrow="ALWAYS">
@@ -76,13 +88,13 @@
                 <VBox maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="341.0" prefWidth="171.0" HBox.hgrow="ALWAYS">
                     <children>
                         <Label maxHeight="-Infinity" maxWidth="1.7976931348623157E308" prefHeight="20.0" prefWidth="194.0" text="消息记录" />
-                        <TextArea fx:id="text" disable="true" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="224.0" prefWidth="93.0" VBox.vgrow="ALWAYS" />
+                        <TextArea fx:id="text" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="224.0" prefWidth="93.0" VBox.vgrow="ALWAYS" />
                         <Label maxHeight="-Infinity" maxWidth="1.7976931348623157E308" prefHeight="20.0" prefWidth="194.0" text="消息输入框：" VBox.vgrow="ALWAYS" />
                         <TextArea fx:id="input" maxHeight="-Infinity" maxWidth="1.7976931348623157E308" prefHeight="81.0" prefWidth="171.0" VBox.vgrow="ALWAYS" />
                         <HBox maxHeight="-Infinity" maxWidth="1.7976931348623157E308" prefHeight="18.0" prefWidth="194.0" VBox.vgrow="ALWAYS">
                             <children>
                                 <Label maxWidth="1.7976931348623157E308" HBox.hgrow="ALWAYS" />
-                                <Button fx:id="send" maxHeight="-Infinity" maxWidth="-Infinity" mnemonicParsing="false" prefHeight="30.0" prefWidth="99.0" text="发送" HBox.hgrow="ALWAYS" />
+                                <Button fx:id="send" maxHeight="-Infinity" maxWidth="-Infinity" mnemonicParsing="false" onAction="#Send" prefHeight="27.0" prefWidth="91.0" stylesheets="@../css/drawerclient.css" text="发送" HBox.hgrow="ALWAYS" />
                             </children>
                         </HBox>
                     </children>

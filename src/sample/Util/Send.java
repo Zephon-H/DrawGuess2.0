@@ -46,6 +46,19 @@ public class Send {
         }
     }
 
+    public String send(String title){
+        send.setOnAction(event -> {
+            try {
+                msg = title;
+                dos.writeUTF("画手："+name + "-" + msg + "\n");
+
+            } catch (IOException e) {
+
+            }
+        });
+        return msg;
+    }
+
     public String send(){
             send.setOnAction(event -> {
                 try {

@@ -22,15 +22,10 @@ import javafx.beans.property.StringProperty;
  * @since 1.0.0
  */
 public class AppModel {
-    private StringProperty text = new SimpleStringProperty();
-
-    public AppModel()
-    {
-        this.text = new SimpleStringProperty();
-    }
+    private final StringProperty text = new SimpleStringProperty();
 
     public StringProperty textProperty() {
-        return text;
+        return text ;
     }
 
     public final String getText() {

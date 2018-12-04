@@ -5,6 +5,9 @@
     -fx-background-color: rgb(123,76,33);
     -fx-background-image: url("../images/bg.png");
 }
+#head{
+    -fx-background-color: rgb(123,76,33);
+}
 #menuThickness{
     -fx-background-color: rgb(123,76,33);
     -fx-border-color: #000;
@@ -92,4 +95,10 @@
     -fx-border-color: #000;
     -fx-border-radius: 5;
     -fx-border-width: 2;
+}
+#send{
+    -fx-background-color: #2682f4;
+    -fx-border-radius: 0;
+    -fx-border-color: #2682f4;
+    -fx-text-fill: #fff;
 }

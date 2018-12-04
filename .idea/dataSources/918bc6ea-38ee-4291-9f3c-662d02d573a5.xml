@@ -921,7 +921,7 @@
     </column>
     <column id="232" parent="229" name="title">
       <Position>2</Position>
-      <DataType>varchar(50)|0s</DataType>
+      <DataType>char(20)|0s</DataType>
       <NotNull>1</NotNull>
       <ColumnKind>normal</ColumnKind>
     </column>

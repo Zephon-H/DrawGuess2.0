@@ -1,26 +1,36 @@
 package sample.controller;
 
 
+import javafx.animation.Animation;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.application.Platform;
 import javafx.beans.value.ObservableDoubleValue;
 import javafx.beans.value.ObservableNumberValue;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.event.Event;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.Cursor;
-import javafx.scene.ImageCursor;
-import javafx.scene.SnapshotParameters;
+import javafx.scene.*;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.image.WritableImage;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Line;
+import javafx.stage.Stage;
+import javafx.stage.StageStyle;
+import javafx.util.Duration;
+import sample.Database.MyDataBase;
+import sample.Util.AppModel;
 import sample.Util.Receive;
 import sample.Util.Send;
 
@@ -28,6 +38,7 @@ import javax.imageio.ImageIO;
 import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.IOException;
 import java.net.Socket;
 import java.net.URL;
 import java.text.DecimalFormat;
@@ -53,6 +64,10 @@ public class DrawerClientController implements Initializable {
     private Slider slThickness;
     @FXML
     private MenuButton menuThickness;
+    @FXML
+    private Label titleLabel;
+    @FXML
+    private Label timeLabel;
 
     private GraphicsContext gc;
     private Paint color;
@@ -61,10 +76,34 @@ public class DrawerClientController implements Initializable {
     private Socket picSocket;
     private Socket chattingSocket;
     private String name;
+    private boolean isrunning;
+    Timeline tl;
 
+    public DrawerClientController(String name){
+        this.name = name;
+    }
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        time = 60;
+        isrunning = false;
+        tl = new Timeline();
+        try {
+            new Thread(()->{
+                try {
+                    picSocket = new Socket("localhost", 9999);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }).start();
+            //picSocket = new Socket("localhost", 9999);
+            chattingSocket = new Socket("localhost", 8888);
+            new Thread(new Receive(chattingSocket, text)).start();
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.out.println("图片服务器连接失败");
+        }
+        System.out.println("name"+name+".");
         color = Color.BLACK;
         gc = canvas.getGraphicsContext2D();
         gc.save();
@@ -73,18 +112,32 @@ public class DrawerClientController implements Initializable {
         canvas.heightProperty().bind(vBox.heightProperty().subtract(1));
         startX = startY = endX = endY = 0;
         colorPicker.setValue(Color.BLACK);
-        clear();
+        Platform.runLater(this::clear);
         draw();
+    }
+    @FXML
+    public void Send(){
         try {
-            picSocket = new Socket("localhost", 9999);
-            chattingSocket = new Socket("localhost", 8888);
-            Send s = new Send(chattingSocket, input, send, "");
-            s.send();
-            new Thread(new Receive(chattingSocket, text)).start();
-        } catch (Exception e) {
-            System.out.println("图片服务器连接失败");
+            DataOutputStream dos = new DataOutputStream(chattingSocket.getOutputStream());
+            String msg = input.getText();
+            dos.writeUTF("画者-"+name + ":" + msg + "\n");
+        } catch (IOException e) {
+
+        }
+        input.setText("");
+        input.requestFocus();
+    }
+
+    public void Send(String title){
+        try {
+            DataOutputStream dos = new DataOutputStream(chattingSocket.getOutputStream());
+            String msg = title;
+            dos.writeUTF( msg);
+        } catch (IOException e) {
+
         }
     }
+
 
     @FXML
     public void slideChange() {
@@ -100,13 +153,8 @@ public class DrawerClientController implements Initializable {
     /**
      * 画笔---设置颜色---宽度
      */
-    boolean flag = true;
     @FXML
     private void draw() {
-        if(flag){
-            Platform.runLater(this::clear);
-            flag = false;
-        }
         Image img = new Image("file:D:\\JavaCode\\DrawGuess2.0\\src\\sample\\images\\paint.png");
         canvas.setCursor(new ImageCursor(img, 12, 12));
         gc.setLineWidth(2);
@@ -239,7 +287,6 @@ public class DrawerClientController implements Initializable {
         });
     }
 
-
     /**
      * 清屏
      */
@@ -272,4 +319,87 @@ public class DrawerClientController implements Initializable {
             System.out.println("图片保存失败");
         }
     }
+    @FXML
+    public void begin(){
+        if(tl.getStatus().equals(Animation.Status.RUNNING)){
+            return ;
+        }
+        isrunning = true;
+        MyDataBase m = new MyDataBase();
+        m.getTitle();
+        String str = m.getCurrentTitle();
+        titleLabel.setText("题目："+str);
+        Send(str);
+        TimeStart();
+    }
+    private int time;
+    @FXML
+    public void easy(){
+        if(!isrunning)
+        time = 90;
+    }
+    @FXML
+    public void mid(){
+        if(!isrunning)
+        time = 60;
+    }
+    @FXML
+    public void hard(){
+        if(!isrunning)
+        time = 30;
+    }
+
+    public void TimeStart(){
+        tl = new Timeline(new KeyFrame(Duration.millis(1000), e->{
+            timeLabel.setText("还剩:"+--time+"秒");
+            if(time==0){
+                System.out.println("over");
+            }
+        }));
+        tl.setCycleCount(time);
+        tl.play();
+        tl.onFinishedProperty().set(event -> {
+            Alert alert = new Alert(Alert.AlertType.INFORMATION,"时间到",new ButtonType("继续游戏",ButtonBar.ButtonData.YES),new ButtonType("休息一下",ButtonBar.ButtonData.NO));
+            alert.setTitle("提示");
+
+            alert.setOnHidden(ev->{
+                if( alert.getResult().getButtonData().equals(ButtonBar.ButtonData.YES)){
+                    begin();
+                }else{
+                    System.out.println("休息");
+                    isrunning = false;
+                }
+            });
+            alert.show();
+        });
+
+    }
+    @FXML
+    public void about(){
+        Stage s = new Stage();
+        Parent root = null;
+        try {
+            root = FXMLLoader.load(getClass().getResource("../view/About.fxml"));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        s.setTitle("你画我猜");
+        s.getIcons().add(new Image("file:src/sample/images/icon.png"));
+        Scene scene = new Scene(root,300,160);
+        s.setScene(scene);
+        s.setResizable(false);
+        scene.getAccelerators().put(new KeyCodeCombination(KeyCode.ESCAPE ), ()->{
+            s.close();
+        });
+        s.addEventHandler(MouseEvent.MOUSE_CLICKED, (event)->{
+            s.close();
+        });
+        s.initStyle(StageStyle.TRANSPARENT);
+        s.show();
+    }
+    @FXML
+    public void exit(){
+        System.exit(0);
+    }
+
 }

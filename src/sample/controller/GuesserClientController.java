@@ -50,18 +50,19 @@ public class GuesserClientController implements Initializable {
     @FXML
     private Button send;
 
-
+    public GuesserClientController(String name){
+        this.name = name;
+    }
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         try {
-            name="";
             System.out.println("name="+name);
             chattingSocket = new Socket("localhost",8888);
             gc = canvas.getGraphicsContext2D();
             System.out.println(".."+gc==null);
+            new Thread(new Receive(chattingSocket, text)).start();
             new Thread(new PicReceiver(gc)).start();
-            new Thread(new Receive(chattingSocket,text)).start();
         } catch (Exception e) {
             //System.out.println("图片服务器连接失败");
         }
@@ -69,11 +70,10 @@ public class GuesserClientController implements Initializable {
     }
     @FXML
     public void Send(){
-
         try {
             DataOutputStream dos = new DataOutputStream(chattingSocket.getOutputStream());
             String msg = input.getText();
-            dos.writeUTF(name + ":" + msg + "\n");
+            dos.writeUTF("猜者-"+name + ":" + msg + "\n");
         } catch (IOException e) {
 
         }

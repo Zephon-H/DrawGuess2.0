@@ -1,0 +1,20 @@
+.gp{
+    -fx-background-color: #edffe1;
+}
+#textUser{
+    -fx-background-radius: 5;
+}
+#textPwd{
+    -fx-background-radius: 5;
+}
+#label{
+    -fx-text-fill: #ff0800;
+}
+.button{
+    -fx-background-color: #4fb8ff;
+    -fx-background-radius: 5;
+    -fx-text-fill: #fff;
+}
+#cancel{
+    -fx-background-color: #ff0800;
+}

@@ -17,8 +17,7 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 /**
  * 〈一句话功能简述〉<br>
@@ -30,10 +29,13 @@ import java.util.List;
  */
 public class ChattingServer {
     private List<Channel> list;
-
+    private String title;
+    private Set<String> right;
     public ChattingServer() throws IOException {
         ServerSocket serverSocket = new ServerSocket(8888);
         list = new ArrayList<>();
+        right = new HashSet<>();
+        title="";
         while (true) {
             Socket socket = serverSocket.accept();
             //一个accecpt,一个客户端
@@ -46,20 +48,17 @@ public class ChattingServer {
 
     public static void main(String[] args) throws IOException {
         new ChattingServer();
-
     }
 
     class Channel implements Runnable {
         private boolean isRunning = true;
         private DataInputStream dis;
         private DataOutputStream dos;
-        private String title;
         private MyDataBase m;
 
         public Channel(Socket socket) {
             try {
                 m = new MyDataBase();
-                title = m.getCurrentTitle();
                 dos = new DataOutputStream(socket.getOutputStream());
                 dis = new DataInputStream(socket.getInputStream());
             } catch (IOException e) {
@@ -71,20 +70,36 @@ public class ChattingServer {
         private String receive() {
             String msg = "";
             try {
-                msg = dis.readUTF();
-                System.out.println(msg);
+                    msg = dis.readUTF();
+                    System.out.println(msg);
             } catch (IOException e) {
                 e.printStackTrace();
                 isRunning = false;
                 list.remove(this);
             }
             String role = "";
+            String str="";
             if (msg != null && !msg.equals("")) {
-                role = msg.substring(0, 1);
+                str = msg.substring(0,2);
             }
-            if (msg.equals(title) && role.equals("猜者") && title != null) {
-                m.delete("delete from title_table where title=" + "'" + title + "'");
-                return msg + "系统消息：恭喜你，答对了\n";
+            if(!str.equals("猜者")&&!str.equals("画者")&&str!=null&&!str.equals("")){
+                title = str;
+                System.out.println(str);
+                String n="";
+                for(String t:right)n+=(t+" ");
+                System.out.println("正"+n);
+                right.clear();
+                if(!n.equals(""))
+                return "上一局答对的人有"+n+"\n游戏开始\n";
+                else return "游戏开始\n";
+            }else{
+                role = str;
+            }
+            String name = msg.substring(msg.indexOf('-')+1,msg.indexOf(':'));
+            if (msg.contains(title) && role.equals("猜者") && title != null) {
+               // m.delete("delete from title_table where title=" + "'" + title + "'");
+                right.add(name);
+                return msg + "系统消息：恭喜你答对了\n";
             } else return msg;
         }
 
@@ -103,13 +118,22 @@ public class ChattingServer {
 
         private void sendAll() {
             String msg = receive();
-            for (Channel c : list) {
-                c.send(msg);
+            if(msg.contains("答对了")){
+                for (Channel c : list) {
+                    if(c==this)
+                    c.send(msg);
+                }
+            }
+            else {
+                for (Channel c : list) {
+                    c.send(msg);
+                }
             }
         }
 
         @Override
         public void run() {
+            System.out.println(MyDataBase.current);
             while (isRunning) {
                 sendAll();
             }

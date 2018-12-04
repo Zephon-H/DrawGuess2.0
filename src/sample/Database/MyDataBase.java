@@ -34,7 +34,7 @@ public class MyDataBase {
     static PreparedStatement ps = null;
     static ResultSet rs = null;
     List<Map> list = new ArrayList<Map>();//返回所有记录
-
+    public static String current="";
     public MyDataBase(){
     }
     public boolean checkedUser(String name,String pwd){
@@ -51,38 +51,49 @@ public class MyDataBase {
         return flag;
     }
 
-    public static void main(String[] args){
-        MyDataBase m = new MyDataBase();
-        m.query("select * from user");
-       // m.insert("insert into title_table (id,title) value (10,'三长两短');");
-       /* m.getTitle().forEach(a->System.out.println(a));
-        List list = m.getTitle().subList(0, 4);
-        list.forEach(a->System.out.println(a));
-        String str = (String) list.get(0);
-        System.out.println("asd"+str);
-        m.delete("delete from title_table where title="+"'"+str+"'");*/
-       // m.update("update title_table set id = -1 while title="+str);
-        //System.out.println(m.getCurrentTitle());
-
+    public boolean checkedUser(String name){
+        list = query("select * from user");
+        boolean flag = false;
+        for(Map m:list){
+            if(m.get(name)!=null){
+                flag = true;
+            }
+        }
+        return flag;
     }
 
-    public String getCurrentTitle(){
-        String str="";
+    public boolean checkedWord(String word){
         list = query("select * from title_table");
+        boolean flag = false;
         for(Map m:list){
-            if(m.get(-1)!=null)
-                str= (String) m.get(-1);
+            if(m.containsValue(word)){
+                flag = true;
+            }
         }
-        return str;
+        return flag;
+    }
+
+    public static void main(String[] args){
+        MyDataBase m = new MyDataBase();
+        m.insert("insert into title_table values("+7+",'"+"asdf"+"')");
+    }
+    List<String> l = new ArrayList<>();
+    public String getCurrentTitle(){
+        current = l.get(0);
+        return l.get(0);
     }
 
     public List getTitle(){
-        List<String> l = new ArrayList<>();
+
         list = query("select * from title_table");
-        list.forEach(map->{
+        for(int i=1;i<=list.size();i++){
+            l.add((String) list.get(i-1).get(i));
+        }
+        /*list.forEach(map->{
             l.add((String)map.get(list.indexOf(map)));
-        });
+        });*/
         Collections.shuffle(l);
+
         return l;
     }
 
