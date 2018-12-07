@@ -11,6 +11,7 @@
 package sample.server;
 
 import sample.Database.MyDataBase;
+import sample.Util.CloseUtil;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -78,6 +79,8 @@ public class ChattingServer {
             } catch (IOException e) {
                 // e.printStackTrace();
                 isRunning = false;
+                list.remove(this);
+                CloseUtil.closeAll(dos,dis);
             }
         }
 
@@ -95,6 +98,7 @@ public class ChattingServer {
                 //e.printStackTrace();
                 isRunning = false;
                 list.remove(this);
+                CloseUtil.closeAll(dos,dis);
             }
             String role = "";
             String str = "";
@@ -127,6 +131,7 @@ public class ChattingServer {
             } catch (StringIndexOutOfBoundsException s) {
                 isRunning = false;
                 list.remove(this);
+                CloseUtil.closeAll(dos,dis);
             }
             return msg;
         }
@@ -146,6 +151,7 @@ public class ChattingServer {
                     // e.printStackTrace();
                     isRunning = false;
                     list.remove(this);
+                    CloseUtil.closeAll(dos,dis);
                 }
             }
         }

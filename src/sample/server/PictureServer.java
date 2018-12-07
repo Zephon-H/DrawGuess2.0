@@ -10,6 +10,8 @@
  */
 package sample.server;
 
+import sample.Util.CloseUtil;
+
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -65,6 +67,7 @@ class PicChannel implements Runnable {
             // e.printStackTrace();
             isRunning = false;
             list.remove(this);
+            CloseUtil.closeAll(dos,is);
         }
     }
 
@@ -101,6 +104,7 @@ class PicChannel implements Runnable {
         } catch (IOException e) {
             isRunning = false;
             list.remove(this);
+            CloseUtil.closeAll(dos,is);
         }
     }
 
@@ -119,8 +123,9 @@ class PicChannel implements Runnable {
                 dos.flush();
             }
         } catch (Exception e) {
-             isRunning=false;
-             list.remove(this);
+            isRunning = false;
+            list.remove(this);
+            CloseUtil.closeAll(dos,is);
         }
     }
 
