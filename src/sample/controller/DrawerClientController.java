@@ -6,7 +6,6 @@ import javafx.animation.AnimationTimer;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Platform;
-import javafx.concurrent.Task;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -23,15 +22,11 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
-import javafx.scene.shape.Ellipse;
-import javafx.scene.transform.Transform;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.util.Duration;
 import sample.Database.MyDataBase;
-import sample.JavaBean.Shape;
 import sample.Util.Receive;
-
 import javax.imageio.ImageIO;
 import java.io.DataOutputStream;
 import java.io.File;
@@ -39,8 +34,6 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.net.Socket;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.ResourceBundle;
 
 
@@ -52,7 +45,7 @@ import java.util.ResourceBundle;
  * @create 2018/12/2
  * @since 1.0.0
  */
-public class DrawerClientController implements Initializable {
+public class DrawerClientController implements Initializable{
     @FXML
     private Canvas canvas;
 
@@ -151,7 +144,7 @@ public class DrawerClientController implements Initializable {
             DataOutputStream dos = new DataOutputStream(chattingSocket.getOutputStream());
             String msg = input.getText();
             dos.writeUTF("画者-" + name + ":" + msg + "\n");
-        } catch (IOException e) {
+        } catch (Exception e) {
             System.out.println("服务器异常");
         }
         input.setText("");
@@ -477,6 +470,5 @@ public class DrawerClientController implements Initializable {
         s.initStyle(StageStyle.TRANSPARENT);
         s.show();
     }
-
 
 }
