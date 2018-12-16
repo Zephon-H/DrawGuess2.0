@@ -34,10 +34,13 @@
                   <HBox maxHeight="-Infinity" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="26.0" prefWidth="537.0" VBox.vgrow="ALWAYS" />
                     <VBox fx:id="vBox" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="334.0" prefWidth="435.0" VBox.vgrow="ALWAYS">
                         <children>
-                            <Canvas fx:id="canvas" height="328.0" width="546.0" VBox.vgrow="ALWAYS" />
+                            <Canvas fx:id="canvas" height="371.0" width="615.0" VBox.vgrow="ALWAYS" />
                         </children>
                     </VBox>
-                    <HBox maxHeight="-Infinity" maxWidth="1.7976931348623157E308" prefHeight="32.0" prefWidth="428.0" styleClass="HBox" VBox.vgrow="ALWAYS" />
+                    <HBox maxHeight="-Infinity" maxWidth="1.7976931348623157E308" prefHeight="32.0" prefWidth="428.0" styleClass="HBox" VBox.vgrow="ALWAYS">
+                     <children>
+                        <Label fx:id="lbState" prefHeight="32.0" prefWidth="383.0" text="网络状态" />
+                     </children></HBox>
                 </children>
             </VBox>
             <VBox maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="341.0" prefWidth="171.0" HBox.hgrow="ALWAYS">

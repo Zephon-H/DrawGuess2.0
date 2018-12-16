@@ -2,9 +2,11 @@ package sample.controller;
 
 
 import javafx.animation.Animation;
+import javafx.animation.AnimationTimer;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Platform;
+import javafx.concurrent.Task;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -21,10 +23,13 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
+import javafx.scene.shape.Ellipse;
+import javafx.scene.transform.Transform;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.util.Duration;
 import sample.Database.MyDataBase;
+import sample.JavaBean.Shape;
 import sample.Util.Receive;
 
 import javax.imageio.ImageIO;
@@ -34,7 +39,10 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.net.Socket;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.ResourceBundle;
+
 
 /**
  * 〈一句话功能简述〉<br>
@@ -64,6 +72,8 @@ public class DrawerClientController implements Initializable {
     private Label titleLabel;
     @FXML
     private Label timeLabel;
+    @FXML
+    private Label lbState;
 
     private GraphicsContext gc;
     private Paint color;
@@ -101,26 +111,34 @@ public class DrawerClientController implements Initializable {
             new Thread(() -> {
                 try {
                     picSocket = new Socket("localhost", 9999);
+                    lbState.setText("网络状态:已连接");
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    //e.printStackTrace();
+                    lbState.setText("网络状态:未连接");
                 }
             }).start();
             chattingSocket = new Socket("localhost", 8888);
+            lbState.setText("网络状态:已连接");
             new Thread(new Receive(chattingSocket, text)).start();
         } catch (Exception e) {
-            e.printStackTrace();
-            System.out.println("图片服务器连接失败");
+            //e.printStackTrace();
+            lbState.setText("网络状态:未连接");
         }
-        System.out.println("name" + name + ".");
         color = Color.BLACK;
         gc = canvas.getGraphicsContext2D();
-        gc.save();
-        thickness = 2;
+        thickness = 2;//设置画笔默认粗细
         canvas.widthProperty().bind(vBox.widthProperty().subtract(1));
         canvas.heightProperty().bind(vBox.heightProperty().subtract(1));
-        startX = startY = endX = endY = 0;
+        startX = startY = endX = endY = 0;//初始化
         colorPicker.setValue(Color.BLACK);
         Platform.runLater(this::clear);
+        new AnimationTimer() {
+                @Override
+            public void handle(long now) {
+                if(!lbState.getText().equals("网络状态:未连接"))
+                lbState.setText("网络状态:已连接"+" 当前在线人数:"+MyDataBase.getInstance().getOnlineNum());
+            }
+        }.start();
         draw();
     }
 
@@ -142,7 +160,6 @@ public class DrawerClientController implements Initializable {
 
     /**
      * 发送特定的消息
-     *
      * @param title
      */
     public void Send(String title) {
@@ -230,28 +247,32 @@ public class DrawerClientController implements Initializable {
     }
 
     /**
-     * 直线选项-画直线
-     * 用count代表第几个点，点击两点连成一条直线
+     * 直线选项-画直线,通过保存图像，然后恢复的方式实现
      */
     @FXML
     public void drawLine() {
         draw();
-        canvas.setOnMousePressed(event -> {
+        mouseSetting();
+        canvas.setOnMouseDragged(event -> {
+            endX = event.getX();
+            endY = event.getY();
+            gc.setStroke(color);
+            gc.drawImage(img,0,0,canvas.getWidth(),canvas.getHeight());
+            System.out.println(canvas.getWidth()+" "+img.getHeight());
+            gc.strokeLine(startX, startY, endX, endY);
             sendPic();
-            count++;
-            if (count % 2 != 0) {
-                startX = event.getX();
-                startY = event.getY();
-            } else {
-                endX = event.getX();
-                endY = event.getY();
-            }
+        });
+    }
+
+    private void mouseSetting(){
+        canvas.setOnMousePressed(event -> {
+            img = canvas.snapshot(new SnapshotParameters(), null);
+            startX = event.getX();
+            startY = event.getY();
+            sendPic();
         });
         canvas.setOnMouseReleased(event -> {
             sendPic();
-            gc.strokeOval(event.getX(), event.getY(), 0.5, 0.5);
-            if (count % 2 == 0)
-                gc.strokeLine(startX, startY, endX, endY);
         });
     }
 
@@ -265,55 +286,36 @@ public class DrawerClientController implements Initializable {
     }
 
     /**
-     * 矩形选项-画矩形
-     * 重复画时有bug
+     * 矩形选项-画矩形,通过保存图像，然后恢复的方式实现
      */
     @FXML
     public void drawRec() {
         draw();
-        canvas.setOnMousePressed(event -> {
-            startX = event.getX();
-            startY = event.getY();
-            sendPic();
-        });
-        canvas.setOnMouseReleased(event -> {
-            gc.strokeRect(startX, startY, Math.abs(endX - startX), Math.abs(endY - startY));
-            sendPic();
-        });
+        mouseSetting();
         canvas.setOnMouseDragged(event -> {
-            gc.setStroke(Color.rgb(80, 113, 91));
-            gc.strokeRect(startX, startY, Math.abs(endX - startX), Math.abs(endY - startY));
             endX = event.getX();
             endY = event.getY();
             gc.setStroke(color);
+            gc.drawImage(img,0,0,canvas.getWidth(),canvas.getHeight());
             gc.strokeRect(startX, startY, Math.abs(endX - startX), Math.abs(endY - startY));
             sendPic();
         });
     }
 
     /**
-     * 画圆选项-画圆，但只能点击，看不到轨迹变化
-     * 功能未完全实现
+     * 画圆选项-画圆，通过保存图像，然后恢复的方式实现
      */
+    WritableImage img;
     @FXML
     public void drawCircle() {
         draw();
-        canvas.setOnMousePressed(event -> {
-            startX = event.getX();
-            startY = event.getY();
-            sendPic();
-        });
-        canvas.setOnMouseReleased(event -> {
-            gc.strokeOval(startX, startY, Math.abs(endX - startX), Math.abs(endY - startY));
-            sendPic();
-        });
+        mouseSetting();
         canvas.setOnMouseDragged(event -> {
-            /*gc.setStroke(Color.WHITE);
-            gc.strokeOval(startX,startY,Math.abs(endX-startX),Math.abs(endY-startY));*/
             endX = event.getX();
             endY = event.getY();
-            // gc.setStroke(color);
-            //gc.strokeOval(startX,startY,Math.abs(endX-startX),Math.abs(endY-startY));
+            gc.setStroke(color);
+            gc.drawImage(img,0,0,canvas.getWidth(),canvas.getHeight());
+            gc.strokeOval(startX, startY, Math.abs(endX - startX), Math.abs(endY - startY));
             sendPic();
         });
     }
@@ -357,8 +359,11 @@ public class DrawerClientController implements Initializable {
      * 菜单中游戏中点击开始选项，开始计时
      */
     @FXML
+    private MenuItem miStart;
+    @FXML
     public void begin() {
         if (tl.getStatus().equals(Animation.Status.RUNNING)) {
+            miStart.setDisable(false);
             return;
         }
         isrunning = true;
@@ -368,6 +373,7 @@ public class DrawerClientController implements Initializable {
         titleLabel.setText("题目：" + str);
         Send(str);
         TimeStart();
+        miStart.setDisable(true);
     }
 
     /**
@@ -375,6 +381,7 @@ public class DrawerClientController implements Initializable {
      */
     @FXML
     public void exit() {
+       MyDataBase.getInstance().update("update user set flag=0 where username='"+name+"'");
         System.exit(0);
     }
 
@@ -435,6 +442,7 @@ public class DrawerClientController implements Initializable {
                 } else {
                     time = t;
                     System.out.println("休息");
+                    miStart.setDisable(false);
                     isrunning = false;
                 }
             });

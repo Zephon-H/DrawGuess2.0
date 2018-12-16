@@ -64,7 +64,6 @@ public class ChattingServer {
         private boolean isRunning = true;//为true代表服务器在运行
         private DataInputStream dis;
         private DataOutputStream dos;
-        private MyDataBase m;
 
         /**
          * 初始化服务器
@@ -73,7 +72,6 @@ public class ChattingServer {
          */
         public Channel(Socket socket) {
             try {
-                m = new MyDataBase();
                 dos = new DataOutputStream(socket.getOutputStream());
                 dis = new DataInputStream(socket.getInputStream());
             } catch (IOException e) {

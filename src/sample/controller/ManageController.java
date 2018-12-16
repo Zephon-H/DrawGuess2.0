@@ -84,8 +84,7 @@ public class ManageController implements Initializable {
      */
     @FXML
     public void view() {
-        MyDataBase m = new MyDataBase();
-        List l = m.getTitle();
+        List l =MyDataBase.getInstance().getTitle();
         ObservableList<String> items = FXCollections.observableArrayList(l);
         list.setItems(items);
     }
@@ -96,16 +95,15 @@ public class ManageController implements Initializable {
     @FXML
     public void ok() {
         new Thread(() -> {
-            MyDataBase m = new MyDataBase();
             System.out.println(l);
-            int len = m.getTitle().size();
+            int len = MyDataBase.getInstance().getTitle().size();
             if (!l.isEmpty()) {
                 System.out.println(l);
                 for (String str : l) {
                     System.out.println(str);
-                    System.out.println(m.checkedWord(str));
-                    if (!m.checkedWord(str)) {
-                        m.insert("insert into title_table values(" + (++len) + ",'" + str + "')");
+                    System.out.println(MyDataBase.getInstance().checkedWord(str));
+                    if (!MyDataBase.getInstance().checkedWord(str)) {
+                        MyDataBase.getInstance().insert("insert into title_table values(" + (++len) + ",'" + str + "')");
                     }
                 }
             }

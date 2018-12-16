@@ -25,7 +25,7 @@ public class MyDataBase {
     private static String driver = "com.mysql.jdbc.Driver";
     private static String url = "jdbc:mysql://localhost:3333/";
     private static String db = "javawork";
-    private static String character = "?useUnicode=true&characterEncoding=gbk";
+    private static String character = "?useUnicode=true&characterEncoding=gbk&useSSL=false";
     private static String user = "root";
     private static String pass = "";
 
@@ -35,9 +35,12 @@ public class MyDataBase {
     static ResultSet rs = null;
     List<Map> list = new ArrayList<Map>();//返回所有记录
     public static String current="";
-    public MyDataBase(){
+    private static MyDataBase instance;
+    public MyDataBase(){}
+    public static MyDataBase getInstance(){
+        if(instance == null)instance = new MyDataBase();
+        return instance;
     }
-
     /**
      * 检查name与pwd在数据库中是否已经存在-用户登陆
      * @param name
@@ -71,6 +74,26 @@ public class MyDataBase {
                 flag = true;
             }
         }
+        closeDB();
+        return flag;
+    }
+
+    public boolean checkedFlag(String name){
+        connDB();
+        boolean flag = false;
+        try {
+            rs = statement.executeQuery("select * from user");
+            while ((rs.next())){
+                if(rs.getObject(1).equals(name)&&rs.getObject(3).equals(1)){
+                    flag = true;
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }finally {
+            closeDB();
+        }
+
         return flag;
     }
 
@@ -90,13 +113,30 @@ public class MyDataBase {
         return flag;
     }
 
+    public int getOnlineNum(){
+        connDB();
+        int count=0;
+        try {
+            rs = statement.executeQuery("select * from user");
+            while ((rs.next())){
+                if(rs.getObject(3).equals(1)){
+                    count++;
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }finally {
+            closeDB();
+        }
+        return count;
+    }
+
     /**
      * 测试数据库
      * @param args
      */
-    public static void main(String[] args){
-        MyDataBase m = new MyDataBase();
-        m.insert("insert into title_table values("+7+",'"+"asdf"+"')");
+    public static void main(String[] args) {
+        System.out.println(MyDataBase.getInstance().getOnlineNum());
     }
 
 
@@ -132,7 +172,7 @@ public class MyDataBase {
             Class.forName(driver).newInstance();
             conn = DriverManager.getConnection(url+db+character, user, pass);
             if (!conn.isClosed()) {
-                System.out.println("Succeeded connecting to MySQL!");
+               // System.out.println("Succeeded connecting to MySQL!");
             }
 
             statement = conn.createStatement();
@@ -163,7 +203,7 @@ public class MyDataBase {
         if(conn != null){
             try {
                 conn.close();
-                System.out.println("Database connection terminated!");
+                //System.out.println("Database connection terminated!");
             } catch (SQLException e) {
                 e.printStackTrace();
             }

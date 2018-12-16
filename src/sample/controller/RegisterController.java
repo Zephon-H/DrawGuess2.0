@@ -59,8 +59,7 @@ public class RegisterController implements Initializable {
      * @return
      */
     public boolean check() {
-        MyDataBase d = new MyDataBase();
-        if (d.checkedUser(username.getText())) {
+        if (MyDataBase.getInstance().checkedUser(username.getText())) {
             label.setText("用户名已存在");
             return false;
         } else if (username.getText().length() < 6 || username.getText().trim().equals("")) {
@@ -78,13 +77,11 @@ public class RegisterController implements Initializable {
      */
     @FXML
     public void ok() {
-        MyDataBase d = new MyDataBase();
-
         String msg = "";
         if (!check()) {
             msg = "用户名不合法";
-        } else if (!d.checkedUser(username.getText())) {
-            d.insert("insert into user values('" + username.getText() + "','" + pwd.getText() + "')");
+        } else if (!MyDataBase.getInstance().checkedUser(username.getText())) {
+            MyDataBase.getInstance().insert("insert into user values('" + username.getText() + "','" + pwd.getText()+"','"+ "0"+"')");
             msg = "注册成功";
         }
         Alert alert = new Alert(Alert.AlertType.INFORMATION, msg, new ButtonType("确定", ButtonBar.ButtonData.YES));

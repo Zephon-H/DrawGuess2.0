@@ -19,7 +19,7 @@
             <menus>
                 <Menu mnemonicParsing="false" text="游戏">
                     <items>
-                  <MenuItem mnemonicParsing="false" onAction="#begin" text="开始游戏" />
+                  <MenuItem fx:id="miStart" mnemonicParsing="false" onAction="#begin" text="开始游戏" />
                         <MenuItem mnemonicParsing="false" onAction="#exit" text="退出" />
                     </items>
                 </Menu>
@@ -42,13 +42,14 @@
                     <children>
                   <HBox fx:id="head" prefHeight="26.0" prefWidth="538.0" stylesheets="@../css/drawerclient.css">
                      <children>
-                        <Label fx:id="titleLabel" maxHeight="-Infinity" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="26.0" prefWidth="481.0" text="题目：" HBox.hgrow="ALWAYS" />
-                        <Label fx:id="timeLabel" maxHeight="-Infinity" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="26.0" prefWidth="108.0" text="还剩：60秒" HBox.hgrow="ALWAYS" />
+                        <Label fx:id="titleLabel" maxHeight="-Infinity" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="26.0" prefWidth="106.0" text="题目：" HBox.hgrow="ALWAYS" />
+                        <Label fx:id="lbState" maxHeight="-Infinity" maxWidth="1.7976931348623157E308" minWidth="-Infinity" prefHeight="33.0" prefWidth="328.0" text="网络状态：未连接" />
+                        <Label fx:id="timeLabel" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="26.0" prefWidth="92.0" text="还剩：60秒" HBox.hgrow="ALWAYS" />
                      </children>
                   </HBox>
-                        <VBox fx:id="vBox" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="369.0" prefWidth="507.0" VBox.vgrow="ALWAYS">
+                        <VBox fx:id="vBox" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="369.0" prefWidth="507.0" styleClass="VBox" VBox.vgrow="ALWAYS">
                             <children>
-                                <Canvas fx:id="canvas" height="277.0" width="501.0" VBox.vgrow="ALWAYS" />
+                                <Canvas fx:id="canvas" styleClass="VBox" VBox.vgrow="ALWAYS" />
                             </children>
                         </VBox>
                         <HBox maxHeight="-Infinity" maxWidth="1.7976931348623157E308" prefHeight="32.0" prefWidth="428.0" styleClass="HBox" VBox.vgrow="ALWAYS">

@@ -66,13 +66,20 @@ public class LoginController implements Initializable {
     /**
      * 登陆判定具体
      */
+    String username;
     public void login() {
         Stage stage = (Stage) gp.getScene().getWindow();
         count++;
-        String username = textUser.getText();
+        username = textUser.getText();
         String pwd = textPwd.getText();
-        MyDataBase m = new MyDataBase();
-        if (m.checkedUser(username, pwd)) {
+        if(MyDataBase.getInstance().checkedFlag(username)){
+            Alert alert = new Alert(Alert.AlertType.WARNING, "该用户已被登陆", new ButtonType("退出", ButtonBar.ButtonData.YES));
+            alert.setTitle("提示");
+            Optional<ButtonType> bt = alert.showAndWait();
+            if (bt.get().getButtonData().equals(ButtonBar.ButtonData.YES)) {
+                alert.close();
+            }
+        }else if (MyDataBase.getInstance().checkedUser(username, pwd)) {
             if (menu.getText().equals("画手")) {
                 draw();
             } else if (menu.getText().equals("猜者")) {
@@ -80,6 +87,7 @@ public class LoginController implements Initializable {
             } else if (menu.getText().equals("管理员")) {
                 manage();
             }
+            MyDataBase.getInstance().update("update user set flag=1 where username='"+username+"'");
             nstage.show();
             stage.close();
         } else if (count < 3) {
@@ -189,10 +197,17 @@ public class LoginController implements Initializable {
         try {
             Parent root = loader.load();
             nstage.setTitle("你画我猜");
-            nstage.setScene(new Scene(root, 700, 450));
+            nstage.getIcons().add(new Image("file:src/sample/images/icon.png"));
+            nstage.setScene(new Scene(root, 700, 460));
             nstage.setOnCloseRequest(event -> System.exit(0));
+            nstage.setResizable(false);
         } catch (IOException e) {
             e.printStackTrace();
+        } finally {
+            nstage.setOnCloseRequest(event -> {
+                MyDataBase.getInstance().update("update user set flag=0 where username='"+username+"'");
+                System.exit(0);
+            });
         }
     }
 

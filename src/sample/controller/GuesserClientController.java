@@ -10,6 +10,7 @@
  */
 package sample.controller;
 
+import javafx.animation.AnimationTimer;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -18,13 +19,16 @@ import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import sample.Database.MyDataBase;
 import sample.Util.PicReceiver;
 import sample.Util.Receive;
 import java.io.DataOutputStream;
@@ -54,6 +58,10 @@ public class GuesserClientController implements Initializable {
     private TextArea text;
     @FXML
     private Button send;
+    @FXML
+    private Label lbState;
+    @FXML
+    private VBox vBox;
 
     /**
      * 通过构造函数传输用户名的数据
@@ -75,8 +83,17 @@ public class GuesserClientController implements Initializable {
             chattingSocket = new Socket("localhost",8888);
             gc = canvas.getGraphicsContext2D();
             System.out.println(".."+gc==null);
+            canvas.widthProperty().bind(vBox.widthProperty().subtract(1));
+            canvas.heightProperty().bind(vBox.heightProperty().subtract(1));
             new Thread(new Receive(chattingSocket, text)).start();
             new Thread(new PicReceiver(gc)).start();
+            new AnimationTimer() {
+                @Override
+                public void handle(long now) {
+                    if(!lbState.getText().equals("网络状态:未连接"))
+                        lbState.setText("网络状态:已连接"+" 当前在线人数:"+ MyDataBase.getInstance().getOnlineNum());
+                }
+            }.start();
         } catch (Exception e) {
             //System.out.println("图片服务器连接失败");
         }
@@ -104,6 +121,7 @@ public class GuesserClientController implements Initializable {
      */
     @FXML
     public void exit() {
+        MyDataBase.getInstance().update("update user set flag=0 where username='"+name+"'");
         System.exit(0);
     }
     /**
