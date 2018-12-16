@@ -84,7 +84,8 @@ public class ManageController implements Initializable {
      */
     @FXML
     public void view() {
-        List l =MyDataBase.getInstance().getTitle();
+        MyDataBase m = new MyDataBase();
+        List l = m.getUser();
         ObservableList<String> items = FXCollections.observableArrayList(l);
         list.setItems(items);
     }

@@ -180,6 +180,11 @@ public class LoginController implements Initializable {
             root = FXMLLoader.load(getClass().getResource("../view/Manager.fxml"));
         } catch (IOException e) {
             e.printStackTrace();
+        }finally {
+            nstage.setOnCloseRequest(event -> {
+                MyDataBase.getInstance().update("update user set flag=0 where username='"+username+"'");
+                System.exit(0);
+            });
         }
         nstage.setTitle("你画我猜");
         nstage.getIcons().add(new Image("file:src/sample/images/icon.png"));

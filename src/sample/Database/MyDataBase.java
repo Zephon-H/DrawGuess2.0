@@ -136,11 +136,25 @@ public class MyDataBase {
      * @param args
      */
     public static void main(String[] args) {
-        System.out.println(MyDataBase.getInstance().getOnlineNum());
+        System.out.println(MyDataBase.getInstance().getUser());
     }
 
 
     List<String> l = new ArrayList<>();
+
+
+    public List getUser(){
+        list.clear();
+        list = query("select * from user");
+        list.get(0);
+        for(int i=0;i<list.size();i++){
+            for(Object key:list.get(i).keySet()){
+                l.add(key+"-"+list.get(i).get(key));
+            }
+        }
+
+        return l;
+    }
 
     /**
      * 选取打乱顺序后的List中的第一个
@@ -156,6 +170,7 @@ public class MyDataBase {
      * @return
      */
     public List getTitle(){
+        list.clear();
         list = query("select * from title_table");
         for(int i=1;i<=list.size();i++){
             l.add((String) list.get(i-1).get(i));
