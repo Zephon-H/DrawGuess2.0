@@ -19,7 +19,10 @@
                     <MenuItem mnemonicParsing="false" onAction="#exit" text="退出" />
                 </items>
             </Menu>
-            <Menu mnemonicParsing="false" text="设置" />
+            <Menu mnemonicParsing="false" text="设置">
+               <items>
+                  <MenuItem fx:id="bg" mnemonicParsing="false" onAction="#change" text="背景音乐-暂停" />
+               </items></Menu>
             <Menu mnemonicParsing="false" text="帮助">
                 <items>
                     <MenuItem mnemonicParsing="false" onAction="#about" text="关于" />

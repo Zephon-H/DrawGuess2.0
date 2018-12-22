@@ -28,6 +28,7 @@
                   <MenuItem mnemonicParsing="false" onAction="#easy" text="游戏难度-简单" />
                   <MenuItem mnemonicParsing="false" onAction="#mid" text="游戏难度-中等" />
                   <MenuItem mnemonicParsing="false" onAction="#hard" text="游戏难度-困难" />
+                  <MenuItem fx:id="bg" mnemonicParsing="false" onAction="#change" text="背景音乐-暂停" />
                </items></Menu>
                 <Menu mnemonicParsing="false" text="帮助">
                     <items>

@@ -26,6 +26,7 @@ import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.util.Duration;
 import sample.Database.MyDataBase;
+import sample.Util.PlayMusic;
 import sample.Util.Receive;
 import javax.imageio.ImageIO;
 import java.io.DataOutputStream;
@@ -67,6 +68,8 @@ public class DrawerClientController implements Initializable{
     private Label timeLabel;
     @FXML
     private Label lbState;
+    @FXML
+    private MenuItem bg;
 
     private GraphicsContext gc;
     private Paint color;
@@ -99,6 +102,7 @@ public class DrawerClientController implements Initializable{
         isrunning = false;
         //hard();
         easy();
+        Platform.runLater(()-> PlayMusic.getInstance().play());
         tl = new Timeline();
         try {
             new Thread(() -> {
@@ -133,6 +137,20 @@ public class DrawerClientController implements Initializable{
             }
         }.start();
         draw();
+    }
+
+    /**
+     * 背景音乐控制
+     */
+    @FXML
+    public void change(){
+        if(bg.getText().equals("背景音乐-暂停")){
+            PlayMusic.getInstance().pause();
+            bg.setText("背景音乐-开始");
+        }else{
+            PlayMusic.getInstance().play();
+            bg.setText("背景音乐-暂停");
+        }
     }
 
     /**
@@ -459,6 +477,8 @@ public class DrawerClientController implements Initializable{
         s.setTitle("你画我猜");
         s.getIcons().add(new Image("file:src/sample/images/icon.png"));
         Scene scene = new Scene(root, 300, 160);
+        s.setY(400.0);//可改进
+        s.setX(750.0);//可改进
         s.setScene(scene);
         s.setResizable(false);
         scene.getAccelerators().put(new KeyCodeCombination(KeyCode.ESCAPE), () -> {

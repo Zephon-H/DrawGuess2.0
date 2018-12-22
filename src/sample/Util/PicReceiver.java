@@ -21,7 +21,7 @@ import java.net.SocketTimeoutException;
 
 /**
  * 〈一句话功能简述〉<br>
- * 〈图片接收〉
+ * 〈图片接收-Guesser〉
  *
  * @author Zephon
  * @create 2018/12/3

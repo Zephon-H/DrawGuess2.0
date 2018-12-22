@@ -11,6 +11,7 @@
 package sample.controller;
 
 import javafx.animation.AnimationTimer;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -20,6 +21,7 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.MenuItem;
 import javafx.scene.control.TextArea;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
@@ -30,6 +32,7 @@ import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import sample.Database.MyDataBase;
 import sample.Util.PicReceiver;
+import sample.Util.PlayMusic;
 import sample.Util.Receive;
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -62,6 +65,8 @@ public class GuesserClientController implements Initializable {
     private Label lbState;
     @FXML
     private VBox vBox;
+    @FXML
+    private MenuItem bg;
 
     /**
      * 通过构造函数传输用户名的数据
@@ -78,6 +83,7 @@ public class GuesserClientController implements Initializable {
      */
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        Platform.runLater(()-> PlayMusic.getInstance().play());
         try {
             System.out.println("name="+name);
             chattingSocket = new Socket("localhost",8888);
@@ -99,7 +105,19 @@ public class GuesserClientController implements Initializable {
         }
 
     }
-
+    /**
+     * 背景音乐控制
+     */
+    @FXML
+    public void change(){
+        if(bg.getText().equals("背景音乐-暂停")){
+            PlayMusic.getInstance().pause();
+            bg.setText("背景音乐-开始");
+        }else{
+            PlayMusic.getInstance().play();
+            bg.setText("背景音乐-暂停");
+        }
+    }
     /**
      * 消息发送（按钮）
      */
