@@ -34,6 +34,7 @@ import sample.Database.MyDataBase;
 import sample.Util.PicReceiver;
 import sample.Util.PlayMusic;
 import sample.Util.Receive;
+
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
@@ -41,7 +42,7 @@ import java.net.URL;
 import java.util.ResourceBundle;
 
 /**
- * 〈一句话功能简述〉<br> 
+ * 〈一句话功能简述〉<br>
  * 〈猜者界面控制器〉
  *
  * @author Zephon
@@ -70,25 +71,27 @@ public class GuesserClientController implements Initializable {
 
     /**
      * 通过构造函数传输用户名的数据
+     *
      * @param name
      */
-    public GuesserClientController(String name){
+    public GuesserClientController(String name) {
         this.name = name;
     }
 
     /**
      * 初始化
+     *
      * @param location
      * @param resources
      */
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        Platform.runLater(()-> PlayMusic.getInstance().play());
+        Platform.runLater(() -> PlayMusic.getInstance().play());
         try {
-            System.out.println("name="+name);
-            chattingSocket = new Socket("localhost",8888);
+            System.out.println("name=" + name);
+            chattingSocket = new Socket("localhost", 8888);
             gc = canvas.getGraphicsContext2D();
-            System.out.println(".."+gc==null);
+            System.out.println(".." + gc == null);
             canvas.widthProperty().bind(vBox.widthProperty().subtract(1));
             canvas.heightProperty().bind(vBox.heightProperty().subtract(1));
             new Thread(new Receive(chattingSocket, text)).start();
@@ -96,8 +99,8 @@ public class GuesserClientController implements Initializable {
             new AnimationTimer() {
                 @Override
                 public void handle(long now) {
-                    if(!lbState.getText().equals("网络状态:未连接"))
-                        lbState.setText("网络状态:已连接"+" 当前在线人数:"+ MyDataBase.getInstance().getOnlineNum());
+                    if (!lbState.getText().equals("网络状态:未连接"))
+                        lbState.setText("网络状态:已连接" + " 当前在线人数:" + MyDataBase.getInstance().getOnlineNum());
                 }
             }.start();
         } catch (Exception e) {
@@ -105,28 +108,30 @@ public class GuesserClientController implements Initializable {
         }
 
     }
+
     /**
      * 背景音乐控制
      */
     @FXML
-    public void change(){
-        if(bg.getText().equals("背景音乐-暂停")){
+    public void change() {
+        if (bg.getText().equals("背景音乐-暂停")) {
             PlayMusic.getInstance().pause();
             bg.setText("背景音乐-开始");
-        }else{
+        } else {
             PlayMusic.getInstance().play();
             bg.setText("背景音乐-暂停");
         }
     }
+
     /**
      * 消息发送（按钮）
      */
     @FXML
-    public void send(){
+    public void send() {
         try {
             DataOutputStream dos = new DataOutputStream(chattingSocket.getOutputStream());
             String msg = input.getText();
-            dos.writeUTF("猜者-"+name + ":" + msg + "\n");
+            dos.writeUTF("猜者-" + name + ":" + msg + "\n");
         } catch (IOException e) {
 
         }
@@ -139,9 +144,10 @@ public class GuesserClientController implements Initializable {
      */
     @FXML
     public void exit() {
-        MyDataBase.getInstance().update("update user set flag=0 where username='"+name+"'");
+        MyDataBase.getInstance().update("update user set flag=0 where username='" + name + "'");
         System.exit(0);
     }
+
     /**
      * 菜单中帮助中关于选项
      */

@@ -17,7 +17,7 @@ import java.io.IOException;
 import java.net.Socket;
 
 /**
- * 〈一句话功能简述〉<br> 
+ * 〈一句话功能简述〉<br>
  * 〈客户端接收线程类〉
  *
  * @author Zephon
@@ -27,21 +27,22 @@ import java.net.Socket;
 public class Receive implements Runnable {
     private boolean isRunning = true;
     private TextArea text;
-    DataInputStream is ;
+    DataInputStream is;
     Socket socket;
 
     /**
      * 初始化
+     *
      * @param socket
      * @param text
      */
-    public  Receive(Socket socket,TextArea text){
+    public Receive(Socket socket, TextArea text) {
         this.socket = socket;
         try {
             is = new DataInputStream(socket.getInputStream());
             this.text = text;
         } catch (IOException e) {
-           // e.printStackTrace();
+            // e.printStackTrace();
             System.out.println("接收失败");
             isRunning = false;
         }
@@ -50,7 +51,7 @@ public class Receive implements Runnable {
     /**
      * 接收消息
      */
-    private void receive(){
+    private void receive() {
         try {
             //System.out.println(is.readUTF());
             String msg = is.readUTF();
@@ -67,7 +68,7 @@ public class Receive implements Runnable {
      */
     @Override
     public void run() {
-        while(isRunning){
+        while (isRunning) {
             receive();
         }
     }

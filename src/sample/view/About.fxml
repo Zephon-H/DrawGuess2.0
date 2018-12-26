@@ -5,14 +5,18 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="160.0" prefWidth="300.0" styleClass="anchor" stylesheets="@../css/about.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1">
-   <children>
-      <HBox layoutY="-1.0" prefHeight="82.0" prefWidth="300.0" styleClass="HBox" stylesheets="@../css/about.css" AnchorPane.topAnchor="-1.0">
-         <padding>
-            <Insets top="10.0" />
-         </padding></HBox>
-      <Label layoutX="71.0" layoutY="80.0" prefHeight="20.0" prefWidth="172.0" text="应用名称：你画我猜" />
-      <Label layoutX="71.0" layoutY="100.0" prefHeight="20.0" prefWidth="150.0" text="版  本 号：2.0.0" />
-      <Label layoutX="71.0" layoutY="120.0" prefHeight="20.0" prefWidth="136.0" text="作      者：何泽锋" />
-   </children>
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="160.0"
+            prefWidth="300.0" styleClass="anchor" stylesheets="@../css/about.css"
+            xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1">
+    <children>
+        <HBox layoutY="-1.0" prefHeight="82.0" prefWidth="300.0" styleClass="HBox" stylesheets="@../css/about.css"
+              AnchorPane.topAnchor="-1.0">
+            <padding>
+                <Insets top="10.0"/>
+            </padding>
+        </HBox>
+        <Label layoutX="71.0" layoutY="80.0" prefHeight="20.0" prefWidth="172.0" text="应用名称：你画我猜"/>
+        <Label layoutX="71.0" layoutY="100.0" prefHeight="20.0" prefWidth="150.0" text="版  本 号：2.0.0"/>
+        <Label layoutX="71.0" layoutY="120.0" prefHeight="20.0" prefWidth="136.0" text="作      者：何泽锋"/>
+    </children>
 </AnchorPane>

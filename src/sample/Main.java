@@ -1,4 +1,5 @@
 package sample;
+
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
@@ -15,14 +16,14 @@ import javafx.stage.Stage;
 public class Main extends Application {
 
     @Override
-    public void start(Stage primaryStage) throws Exception{
+    public void start(Stage primaryStage) throws Exception {
         Parent root = FXMLLoader.load(getClass().getResource("view/Login.fxml"));
         primaryStage.setTitle("你画我猜");
         primaryStage.getIcons().add(new Image("file:src/sample/images/icon.png"));
-        Scene scene = new Scene(root,500,300);
+        Scene scene = new Scene(root, 500, 300);
         primaryStage.setScene(scene);
         primaryStage.setResizable(false);
-        scene.getAccelerators().put(new KeyCodeCombination(KeyCode.ESCAPE ), ()->{
+        scene.getAccelerators().put(new KeyCodeCombination(KeyCode.ESCAPE), () -> {
             Platform.exit();
         });
         primaryStage.show();

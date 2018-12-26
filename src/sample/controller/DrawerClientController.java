@@ -28,6 +28,7 @@ import javafx.util.Duration;
 import sample.Database.MyDataBase;
 import sample.Util.PlayMusic;
 import sample.Util.Receive;
+
 import javax.imageio.ImageIO;
 import java.io.DataOutputStream;
 import java.io.File;
@@ -46,7 +47,7 @@ import java.util.ResourceBundle;
  * @create 2018/12/2
  * @since 1.0.0
  */
-public class DrawerClientController implements Initializable{
+public class DrawerClientController implements Initializable {
     @FXML
     private Canvas canvas;
 
@@ -85,6 +86,7 @@ public class DrawerClientController implements Initializable{
 
     /**
      * 通过构造函数，从登陆界面传输用户名数据到画手界面
+     *
      * @param name
      */
     public DrawerClientController(String name) {
@@ -102,7 +104,7 @@ public class DrawerClientController implements Initializable{
         isrunning = false;
         //hard();
         easy();
-        Platform.runLater(()-> PlayMusic.getInstance().play());
+        Platform.runLater(() -> PlayMusic.getInstance().play());
         tl = new Timeline();
         try {
             new Thread(() -> {
@@ -130,10 +132,10 @@ public class DrawerClientController implements Initializable{
         colorPicker.setValue(Color.BLACK);
         Platform.runLater(this::clear);
         new AnimationTimer() {
-                @Override
+            @Override
             public void handle(long now) {
-                if(!lbState.getText().equals("网络状态:未连接"))
-                lbState.setText("网络状态:已连接"+" 当前在线人数:"+MyDataBase.getInstance().getOnlineNum());
+                if (!lbState.getText().equals("网络状态:未连接"))
+                    lbState.setText("网络状态:已连接" + " 当前在线人数:" + MyDataBase.getInstance().getOnlineNum());
             }
         }.start();
         draw();
@@ -143,11 +145,11 @@ public class DrawerClientController implements Initializable{
      * 背景音乐控制
      */
     @FXML
-    public void change(){
-        if(bg.getText().equals("背景音乐-暂停")){
+    public void change() {
+        if (bg.getText().equals("背景音乐-暂停")) {
             PlayMusic.getInstance().pause();
             bg.setText("背景音乐-开始");
-        }else{
+        } else {
             PlayMusic.getInstance().play();
             bg.setText("背景音乐-暂停");
         }
@@ -171,6 +173,7 @@ public class DrawerClientController implements Initializable{
 
     /**
      * 发送特定的消息
+     *
      * @param title
      */
     public void send(String title) {
@@ -268,14 +271,14 @@ public class DrawerClientController implements Initializable{
             endX = event.getX();
             endY = event.getY();
             gc.setStroke(color);
-            gc.drawImage(img,0,0,canvas.getWidth(),canvas.getHeight());
-            System.out.println(canvas.getWidth()+" "+img.getHeight());
+            gc.drawImage(img, 0, 0, canvas.getWidth(), canvas.getHeight());
+            System.out.println(canvas.getWidth() + " " + img.getHeight());
             gc.strokeLine(startX, startY, endX, endY);
             sendPic();
         });
     }
 
-    private void mouseSetting(){
+    private void mouseSetting() {
         canvas.setOnMousePressed(event -> {
             img = canvas.snapshot(new SnapshotParameters(), null);
             startX = event.getX();
@@ -307,7 +310,7 @@ public class DrawerClientController implements Initializable{
             endX = event.getX();
             endY = event.getY();
             gc.setStroke(color);
-            gc.drawImage(img,0,0,canvas.getWidth(),canvas.getHeight());
+            gc.drawImage(img, 0, 0, canvas.getWidth(), canvas.getHeight());
             gc.strokeRect(startX, startY, Math.abs(endX - startX), Math.abs(endY - startY));
             sendPic();
         });
@@ -317,6 +320,7 @@ public class DrawerClientController implements Initializable{
      * 画圆选项-画圆，通过保存图像，然后恢复的方式实现
      */
     WritableImage img;
+
     @FXML
     public void drawCircle() {
         draw();
@@ -325,7 +329,7 @@ public class DrawerClientController implements Initializable{
             endX = event.getX();
             endY = event.getY();
             gc.setStroke(color);
-            gc.drawImage(img,0,0,canvas.getWidth(),canvas.getHeight());
+            gc.drawImage(img, 0, 0, canvas.getWidth(), canvas.getHeight());
             gc.strokeOval(startX, startY, Math.abs(endX - startX), Math.abs(endY - startY));
             sendPic();
         });
@@ -371,6 +375,7 @@ public class DrawerClientController implements Initializable{
      */
     @FXML
     private MenuItem miStart;
+
     @FXML
     public void begin() {
         if (tl.getStatus().equals(Animation.Status.RUNNING)) {
@@ -392,7 +397,7 @@ public class DrawerClientController implements Initializable{
      */
     @FXML
     public void exit() {
-       MyDataBase.getInstance().update("update user set flag=0 where username='"+name+"'");
+        MyDataBase.getInstance().update("update user set flag=0 where username='" + name + "'");
         System.exit(0);
     }
 
@@ -427,7 +432,7 @@ public class DrawerClientController implements Initializable{
      * 使用Timeline实现倒计时
      */
     public void timeStart() {
-        int t =time;
+        int t = time;
         tl = new Timeline(new KeyFrame(Duration.millis(1000), e -> {
             timeLabel.setText("还剩:" + --time + "秒");
             if (time == 0) {
@@ -443,7 +448,7 @@ public class DrawerClientController implements Initializable{
             alert.setOnHidden(ev -> {
                 if (alert.getResult().getButtonData().equals(ButtonBar.ButtonData.YES)) {
                     time = t;
-                    System.out.println("time"+time+"t"+t);
+                    System.out.println("time" + time + "t" + t);
                     try {
                         Thread.sleep(100);
                     } catch (InterruptedException e) {

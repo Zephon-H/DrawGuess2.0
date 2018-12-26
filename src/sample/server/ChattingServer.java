@@ -78,7 +78,7 @@ public class ChattingServer {
                 // e.printStackTrace();
                 isRunning = false;
                 list.remove(this);
-                CloseUtil.closeAll(dos,dis);
+                CloseUtil.closeAll(dos, dis);
             }
         }
 
@@ -96,7 +96,7 @@ public class ChattingServer {
                 //e.printStackTrace();
                 isRunning = false;
                 list.remove(this);
-                CloseUtil.closeAll(dos,dis);
+                CloseUtil.closeAll(dos, dis);
             }
             String role = "";
             String str = "";
@@ -129,7 +129,7 @@ public class ChattingServer {
             } catch (StringIndexOutOfBoundsException s) {
                 isRunning = false;
                 list.remove(this);
-                CloseUtil.closeAll(dos,dis);
+                CloseUtil.closeAll(dos, dis);
             }
             return msg;
         }
@@ -149,7 +149,7 @@ public class ChattingServer {
                     // e.printStackTrace();
                     isRunning = false;
                     list.remove(this);
-                    CloseUtil.closeAll(dos,dis);
+                    CloseUtil.closeAll(dos, dis);
                 }
             }
         }

@@ -81,7 +81,7 @@ public class RegisterController implements Initializable {
         if (!check()) {
             msg = "用户名不合法";
         } else if (!MyDataBase.getInstance().checkedUser(username.getText())) {
-            MyDataBase.getInstance().insert("insert into user values('" + username.getText() + "','" + pwd.getText()+"','"+ "0"+"')");
+            MyDataBase.getInstance().insert("insert into user values('" + username.getText() + "','" + pwd.getText() + "','" + "0" + "')");
             msg = "注册成功";
         }
         Alert alert = new Alert(Alert.AlertType.INFORMATION, msg, new ButtonType("确定", ButtonBar.ButtonData.YES));
