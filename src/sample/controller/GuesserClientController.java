@@ -122,7 +122,7 @@ public class GuesserClientController implements Initializable {
      * 消息发送（按钮）
      */
     @FXML
-    public void Send(){
+    public void send(){
         try {
             DataOutputStream dos = new DataOutputStream(chattingSocket.getOutputStream());
             String msg = input.getText();

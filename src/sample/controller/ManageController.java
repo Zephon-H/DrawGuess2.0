@@ -51,10 +51,9 @@ public class ManageController implements Initializable {
 
     /**
      * 鼠标点击“添加”按钮事件
-     * @param event
      */
     @FXML
-    public void addWord(Event event) {
+    public void addWord() {
         l.clear();
         Stage stage = (Stage) pane.getScene().getWindow();
         FileChooser fileChooser = new FileChooser();

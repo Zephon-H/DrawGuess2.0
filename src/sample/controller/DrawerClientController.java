@@ -157,7 +157,7 @@ public class DrawerClientController implements Initializable{
      * 点击“发送”按钮 实现聊天消息发送
      */
     @FXML
-    public void Send() {
+    public void send() {
         try {
             DataOutputStream dos = new DataOutputStream(chattingSocket.getOutputStream());
             String msg = input.getText();
@@ -173,7 +173,7 @@ public class DrawerClientController implements Initializable{
      * 发送特定的消息
      * @param title
      */
-    public void Send(String title) {
+    public void send(String title) {
         try {
             DataOutputStream dos = new DataOutputStream(chattingSocket.getOutputStream());
             String msg = title;
@@ -382,8 +382,8 @@ public class DrawerClientController implements Initializable{
         m.getTitle();
         String str = m.getCurrentTitle();
         titleLabel.setText("题目：" + str);
-        Send(str);
-        TimeStart();
+        send(str);
+        timeStart();
         miStart.setDisable(true);
     }
 
@@ -426,7 +426,7 @@ public class DrawerClientController implements Initializable{
     /**
      * 使用Timeline实现倒计时
      */
-    public void TimeStart() {
+    public void timeStart() {
         int t =time;
         tl = new Timeline(new KeyFrame(Duration.millis(1000), e -> {
             timeLabel.setText("还剩:" + --time + "秒");
@@ -437,7 +437,7 @@ public class DrawerClientController implements Initializable{
         tl.setCycleCount(time);
         tl.play();
         tl.onFinishedProperty().set(event -> {
-            Send("@#$%*&暂停");
+            send("@#$%*&暂停");
             Alert alert = new Alert(Alert.AlertType.INFORMATION, "时间到", new ButtonType("继续游戏", ButtonBar.ButtonData.YES), new ButtonType("休息一下", ButtonBar.ButtonData.NO));
             alert.setTitle("提示");
             alert.setOnHidden(ev -> {
